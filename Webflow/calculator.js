@@ -393,6 +393,25 @@ function initCalculator() {
     }
   }
 
+  function hasTripCardInputStarted() {
+    return getTripCards().some((card) => {
+      const returnParts = getTripReturnDateParts(card);
+      const departureParts = getTripDepartureDateParts(card);
+
+      if (returnParts || departureParts) return true;
+
+      const fields = Array.from(card.querySelectorAll("input, select, textarea")).filter((field) => {
+        if (field.type === "hidden" || field.type === "submit" || field.type === "button") return false;
+        return true;
+      });
+
+      return fields.some((field) => {
+        if (field.type === "radio" || field.type === "checkbox") return field.checked;
+        return String(field.value || "").trim() !== "";
+      });
+    });
+  }
+
   function updateBranchVisibility(issueDateParts) {
     const departureChoice = getSelectedDepartureChoice();
     const departureDateParts = getDepartureDateParts();
@@ -428,8 +447,11 @@ function initCalculator() {
         showBlock(step4Wrap);
 
         if (extraTripsChoice === "yes") {
-          showBlock(step4FollowupYes);
           showBlock(step5Wrap);
+
+          if (hasTripCardInputStarted()) {
+            showBlock(step4FollowupYes);
+          }
         }
 
         if (extraTripsChoice === "no") {
