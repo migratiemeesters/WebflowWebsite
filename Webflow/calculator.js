@@ -1,4 +1,3 @@
-<script>
 document.addEventListener("DOMContentLoaded", function () {
   const monthMap = {
     januari: 0, january: 0,
@@ -1260,4 +1259,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
   calculateTemporaryResidencyDates();
 });
-</script>
