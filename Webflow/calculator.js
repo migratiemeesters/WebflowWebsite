@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+function initCalculator() {
   const monthMap = {
     januari: 0, january: 0,
     februari: 1, february: 1,
@@ -1257,5 +1257,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  calculateTemporaryResidencyDates();
-});
+calculateTemporaryResidencyDates();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCalculator);
+} else {
+  initCalculator();
+}
