@@ -821,7 +821,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
       setOutput(
         "return-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(latestStartParts)} kun je je aanvraag starten zonder boete.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Om in aanmerking te komen, moet je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag uiterlijk op ${formatDateParts(latestStartParts)} in, dan voorkom je een boete.`
       );
       showReturnStatusIcon("return-needed");
       return;
