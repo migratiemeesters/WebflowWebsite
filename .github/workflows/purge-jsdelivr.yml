@@ -1,0 +1,20 @@
+name: Purge jsDelivr cache
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    paths:
+      - "Webflow/calculator.js"
+      - ".github/workflows/purge-jsdelivr.yml"
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Purge calculator.js from jsDelivr
+        run: |
+          curl -sS -L "https://purge.jsdelivr.net/gh/migratiemeesters/WebflowWebsite@main/Webflow/calculator.js"
