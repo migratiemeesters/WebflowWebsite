@@ -809,10 +809,10 @@ function initCalculator() {
     showStep3NoStatusIcon("too-late");
   }
 
-  function updateReturnStatusFromStep3(issueDateParts, visitDeadlineParts, returnDeadlineParts, earliestStartParts, idealLatestStartParts, latestStartParts) {
+  function updateReturnStatusFromStep3(issueDateParts, returnDeadlineParts, earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
 
-    if (!issueDateParts || !earliestStartParts || !idealLatestStartParts || !latestStartParts || !todayParts) {
+    if (!issueDateParts || !returnDeadlineParts || !earliestStartParts || !idealLatestStartParts || !latestStartParts || !todayParts) {
       resetReturnStatusOutputs();
       return;
     }
@@ -1069,7 +1069,7 @@ function initCalculator() {
 
     updateReturnStatusFromStep3(
       issueDateParts,
-      visitDeadlineParts,
+      returnDeadlineParts,
       earliestStartParts,
       idealLatestStartParts,
       latestStartParts
@@ -1186,10 +1186,10 @@ function initCalculator() {
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
 
-    const visitDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, visitDeadlineParts);
+    const visitDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
 
     if (visitDeadlineOverstayCheck.applicable && visitDeadlineOverstayCheck.blocked) {
-      showPermanentBlockedByVisitDeadline(visitDeadlineParts);
+      showPermanentBlockedByVisitDeadline(returnDeadlineParts);
       updateTripOutputs();
       updateStepIcons(issueDateParts);
       return;
@@ -1257,7 +1257,7 @@ function initCalculator() {
     }
   });
 
-calculateTemporaryResidencyDates();
+  calculateTemporaryResidencyDates();
 }
 
 if (document.readyState === "loading") {
