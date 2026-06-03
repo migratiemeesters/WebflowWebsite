@@ -449,7 +449,7 @@ function initCalculator() {
         if (extraTripsChoice === "yes") {
           showBlock(step5Wrap);
 
-          if (hasTripCardInputStarted()) {
+          if (hasVisibleTripWithReturnDate()) {
             showBlock(step4FollowupYes);
           }
         }
@@ -477,6 +477,12 @@ function initCalculator() {
 
   function getVisibleTrips() {
     return getTripCards().filter(isVisible);
+  }
+
+  function hasVisibleTripWithReturnDate() {
+    return getVisibleTrips().some((card) => {
+      return !!getTripReturnDateParts(card);
+    });
   }
 
   function hasStartedTripCard(card) {
@@ -597,14 +603,6 @@ function initCalculator() {
         continue;
       }
 
-      if (returnParts && !nextDepartureParts) {
-        const msg = `Extra reis ${cardNumber}: vul ook een geldige Vertrekdatum in.`;
-        messages.push(msg);
-        showTripError(card, msg);
-        chainStopped = true;
-        continue;
-      }
-
       if (!returnParts && nextDepartureParts) {
         const msg = `Extra reis ${cardNumber}: vul eerst een geldige Inreisdatum in.`;
         messages.push(msg);
@@ -699,7 +697,7 @@ function initCalculator() {
     const departureDateParts = getDepartureDateParts();
     const followupAnswered = isFollowupQuestionAnswered();
     const extraTripsAnswered = isExtraTripsQuestionAnswered();
-    const step5Complete = getVisibleTrips().some(hasStartedTripCard);
+    const step5Complete = hasVisibleTripWithReturnDate();
 
     setStepComplete(1, !!issueDateParts);
     setStepComplete(2, !!issueDateParts && isDepartureQuestionAnswered());
