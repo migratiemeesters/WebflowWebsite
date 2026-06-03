@@ -900,14 +900,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showPermanentBlockedByVisitDeadline(visitDeadlineParts) {
-    setOutput("return-status-title", "Permanente verblijfsvergunning nu niet mogelijk");
+    setOutput("return-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
     setOutput(
       "return-status-description",
       `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor kun je nu niet starten met de aanvraag voor je permanente verblijfsvergunning. Je kunt alleen eerst een verlenging van je tijdelijke verblijfsvergunning aanvragen.`
     );
     showReturnStatusIcon("too-late");
 
-    setOutput("pr-current-status-title", "Permanente verblijfsvergunning nu niet mogelijk");
+    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
     setOutput(
       "pr-current-status-description",
       `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang naar permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
