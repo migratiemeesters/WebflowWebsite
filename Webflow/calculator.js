@@ -899,24 +899,43 @@ function initCalculator() {
     };
   }
 
-  function showPermanentBlockedByVisitDeadline(visitDeadlineParts) {
-    setOutput("return-status-title", "Permanente verblijfsvergunning niet mogelijk");
-    setOutput(
-      "return-status-description",
-      `Je aanvraagperiode voor permanente verblijfsvergunning kan technisch gezien al geopend zijn, maar je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
-    );
+  function showPermanentBlockedByVisitDeadline(returnDeadlineParts, earliestStartParts) {
+    const todayParts = getTodayDateParts();
+
+    const periodNotOpenYet =
+      todayParts &&
+      earliestStartParts &&
+      todayParts.utcMs < earliestStartParts.utcMs;
+
+    setOutput("return-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
+
+    if (periodNotOpenYet) {
+      setOutput(
+        "return-status-description",
+        `Je aanvraagperiode voor permanente verblijfsvergunning is nog niet geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk zodra je aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      );
+    } else {
+      setOutput(
+        "return-status-description",
+        `Je aanvraagperiode voor permanente verblijfsvergunning is geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      );
+    }
+
     showReturnStatusIcon("too-late");
 
-    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet mogelijk");
+    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
     setOutput(
       "pr-current-status-description",
-      `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang naar permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang naar permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
     setOutput("pr-current-status-cta", "Tijdelijke verblijfsvergunning verlengen");
     showPrStatusIcon("too-late");
 
     setOutput("eligibility", "Directe overgang naar permanent niet mogelijk.");
-    setOutput("permanent-trip-status", `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay.`);
+    setOutput(
+      "permanent-trip-status",
+      `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay.`
+    );
   }
 
   function updatePrCurrentStatus(earliestStartParts, idealLatestStartParts, latestStartParts) {
@@ -1189,7 +1208,7 @@ function initCalculator() {
     const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
 
     if (returnDeadlineOverstayCheck.applicable && returnDeadlineOverstayCheck.blocked) {
-      showPermanentBlockedByVisitDeadline(returnDeadlineParts);
+      showPermanentBlockedByVisitDeadline(returnDeadlineParts, earliestStartParts);
       updateTripOutputs();
       updateStepIcons(issueDateParts);
       return;
