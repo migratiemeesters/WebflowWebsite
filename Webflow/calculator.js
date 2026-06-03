@@ -900,14 +900,14 @@ function initCalculator() {
   }
 
   function showPermanentBlockedByVisitDeadline(visitDeadlineParts) {
-    setOutput("return-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
+    setOutput("return-status-title", "Permanente verblijfsvergunning niet mogelijk door te late terugkeer");
     setOutput(
       "return-status-description",
-      `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor kun je nu niet starten met de aanvraag voor je permanente verblijfsvergunning. Je kunt alleen eerst een verlenging van je tijdelijke verblijfsvergunning aanvragen.`
+      `Je aanvraagperiode voor permanente verblijfsvergunning kan technisch gezien al geopend zijn, maar je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
     showReturnStatusIcon("too-late");
 
-    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
+    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet mogelijk door te late terugkeer");
     setOutput(
       "pr-current-status-description",
       `Je bent niet uiterlijk op ${formatDateParts(visitDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang naar permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
@@ -1186,9 +1186,9 @@ function initCalculator() {
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
 
-    const visitDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
+    const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
 
-    if (visitDeadlineOverstayCheck.applicable && visitDeadlineOverstayCheck.blocked) {
+    if (returnDeadlineOverstayCheck.applicable && returnDeadlineOverstayCheck.blocked) {
       showPermanentBlockedByVisitDeadline(returnDeadlineParts);
       updateTripOutputs();
       updateStepIcons(issueDateParts);
