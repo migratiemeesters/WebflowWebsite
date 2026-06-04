@@ -1098,7 +1098,7 @@ function initCalculator() {
       const returnDeadlineText = formatDateParts(returnDeadlineParts);
 
       setOutput("return-deadline", returnDeadlineText);
-      setOutput("return-deadline-text", `Uiterste terugkeerdatum Paraguay: ${returnDeadlineText}`);
+      setOutput("return-deadline-text", `Je uiterste terugkeerdatum is ${returnDeadlineText}. Deze datum bepaalt of je binnen de 365-dagenregel blijft voor een directe aanvraag van je permanente verblijfsvergunning.`);
       setOutput(
         "return-deadline-status",
         `Je moet uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay om niet langer dan 365 opeenvolgende dagen buiten Paraguay te zijn.`
