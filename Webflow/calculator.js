@@ -889,6 +889,8 @@ function initCalculator() {
         return;
       }
 
+      // Als de uiterlijke terugkeerdatum vóór of op de laatste startdatum valt,
+      // dan is de 365-dagenregel wél relevant.
       if (todayParts.utcMs <= returnDeadlineParts.utcMs) {
         setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
         setOutput(
@@ -1098,7 +1100,7 @@ function initCalculator() {
       const returnDeadlineText = formatDateParts(returnDeadlineParts);
 
       setOutput("return-deadline", returnDeadlineText);
-      setOutput("return-deadline-text", `Je uiterste terugkeerdatum is ${returnDeadlineText}. Deze datum bepaalt of je binnen de 365-dagenregel blijft voor een directe aanvraag van je permanente verblijfsvergunning.`);
+      setOutput("return-deadline-text", `Uiterste terugkeerdatum Paraguay: ${returnDeadlineText}`);
       setOutput(
         "return-deadline-status",
         `Je moet uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay om niet langer dan 365 opeenvolgende dagen buiten Paraguay te zijn.`
