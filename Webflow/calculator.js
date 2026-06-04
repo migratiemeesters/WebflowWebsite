@@ -1098,18 +1098,13 @@ function initCalculator() {
       const returnDeadlineText = formatDateParts(returnDeadlineParts);
 
       setOutput("return-deadline", returnDeadlineText);
-      setOutput("return-deadline-text", `Uiterste terugkeerdatum Paraguay: ${returnDeadlineText}`);
-      setOutput(
-        "return-deadline-status",
-        `Je moet uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay om niet langer dan 365 opeenvolgende dagen buiten Paraguay te zijn.`
-      );
+      setOutput("return-deadline-text", `Je uiterste terugkeerdatum is ${returnDeadlineText}. Deze datum bepaalt of je binnen de 365-dagenregel blijft voor een directe aanvraag van je permanente verblijfsvergunning.`);
 
       return returnDeadlineParts;
     }
 
     setOutput("return-deadline", "-");
     setOutput("return-deadline-text", "Uiterste terugkeerdatum Paraguay: -");
-    setOutput("return-deadline-status", "Nog niet berekend.");
     return null;
   }
 
@@ -1130,7 +1125,6 @@ function initCalculator() {
     setOutput("last-departure-paraguay", "-");
     setOutput("return-deadline", "-");
     setOutput("return-deadline-text", "Uiterste terugkeerdatum Paraguay: -");
-    setOutput("return-deadline-status", "Nog niet berekend.");
     resetReturnStatusOutputs();
     setTripValidationMessage([]);
     const wrap = document.querySelector('[data-step3-date-error="wrap"]');
