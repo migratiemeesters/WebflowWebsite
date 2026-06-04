@@ -842,10 +842,10 @@ function initCalculator() {
     const returnDeadlineText = returnDeadlineParts ? formatDateParts(returnDeadlineParts) : "-";
 
     if (departureChoice === "yes" && returnedChoice === "no" && returnDeadlineParts) {
-      const returnDeadlineAfterLatestStart =
-        returnDeadlineParts.utcMs > latestStartParts.utcMs;
+      const returnDeadlineAfterEarliestStart =
+        returnDeadlineParts.utcMs > earliestStartParts.utcMs;
 
-      if (returnDeadlineAfterLatestStart) {
+      if (returnDeadlineAfterEarliestStart) {
         if (todayParts.utcMs < earliestStartParts.utcMs) {
           setOutput("return-status-title", "Nog niet beschikbaar");
           setOutput(
@@ -1303,13 +1303,15 @@ function initCalculator() {
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
 
-    const returnDeadlineAfterLatestStart =
-      returnDeadlineParts && latestStartParts && returnDeadlineParts.utcMs > latestStartParts.utcMs;
+    const returnDeadlineAfterEarliestStart =
+      returnDeadlineParts &&
+      earliestStartParts &&
+      returnDeadlineParts.utcMs > earliestStartParts.utcMs;
 
     const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts, latestStartParts);
 
     if (
-      !returnDeadlineAfterLatestStart &&
+      !returnDeadlineAfterEarliestStart &&
       returnDeadlineOverstayCheck.applicable &&
       returnDeadlineOverstayCheck.blocked
     ) {
