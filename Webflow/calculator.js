@@ -956,7 +956,7 @@ function initCalculator() {
     showReturnStatusIcon("too-late");
   }
 
-  function getVisitDeadlineOverstayCheck(issueDateParts, visitDeadlineParts) {
+  function getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts, latestStartParts) {
     const departureChoice = getSelectedDepartureChoice();
     const departureDateParts = getDepartureDateParts();
     const todayParts = getTodayDateParts();
@@ -964,7 +964,8 @@ function initCalculator() {
     if (
       departureChoice !== "yes" ||
       !issueDateParts ||
-      !visitDeadlineParts ||
+      !returnDeadlineParts ||
+      !latestStartParts ||
       !departureDateParts ||
       !todayParts ||
       departureDateParts.utcMs < issueDateParts.utcMs
@@ -973,16 +974,28 @@ function initCalculator() {
         applicable: false,
         blocked: false,
         departureDateParts: null,
-        visitDeadlineParts: null,
+        returnDeadlineParts: null,
         todayParts: null
+      };
+    }
+
+    // Als de uiterlijke terugkeerdatum later valt dan de laatste startdatum,
+    // dan is de terugkeerregel niet van toepassing op de output/blokkade.
+    if (returnDeadlineParts.utcMs > latestStartParts.utcMs) {
+      return {
+        applicable: false,
+        blocked: false,
+        departureDateParts,
+        returnDeadlineParts,
+        todayParts
       };
     }
 
     return {
       applicable: true,
-      blocked: todayParts.utcMs > visitDeadlineParts.utcMs,
+      blocked: todayParts.utcMs > returnDeadlineParts.utcMs,
       departureDateParts,
-      visitDeadlineParts,
+      returnDeadlineParts,
       todayParts
     };
   }
@@ -1293,7 +1306,7 @@ function initCalculator() {
     const returnDeadlineAfterLatestStart =
       returnDeadlineParts && latestStartParts && returnDeadlineParts.utcMs > latestStartParts.utcMs;
 
-    const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
+    const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts, latestStartParts);
 
     if (
       !returnDeadlineAfterLatestStart &&
