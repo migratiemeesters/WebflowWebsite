@@ -1100,7 +1100,7 @@ function initCalculator() {
     showPrStatusIcon("too-late");
   }
 
-  function updateReturnDeadlineOutputs(issueDateParts, departureChoice) {
+  function updateReturnDeadlineOutputs(issueDateParts, departureChoice, earliestStartParts) {
     const departureDateParts = getDepartureDateParts();
 
     if (
@@ -1115,7 +1115,7 @@ function initCalculator() {
       setOutput("return-deadline", returnDeadlineText);
       setOutput(
         "return-deadline-text",
-        `Je uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel.`
+        `Je uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel en kun je de aanvraag voor je permanente verblijfsvergunning starten op ${formatDateParts(earliestStartParts)}.`
       );
 
       return returnDeadlineParts;
@@ -1182,7 +1182,11 @@ function initCalculator() {
 
     updatePrCurrentStatus(earliestStartParts, idealLatestStartParts, latestStartParts);
 
-    const returnDeadlineParts = updateReturnDeadlineOutputs(issueDateParts, departureChoice);
+    const returnDeadlineParts = updateReturnDeadlineOutputs(
+      issueDateParts,
+      departureChoice,
+      earliestStartParts
+    );
 
     updateReturnStatusFromStep3(
       issueDateParts,
