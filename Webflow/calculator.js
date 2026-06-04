@@ -839,6 +839,8 @@ function initCalculator() {
       return;
     }
 
+    const returnDeadlineText = returnDeadlineParts ? formatDateParts(returnDeadlineParts) : "-";
+
     if (departureChoice === "yes" && returnedChoice === "no" && returnDeadlineParts) {
       const returnDeadlineAfterLatestStart =
         returnDeadlineParts.utcMs > latestStartParts.utcMs;
@@ -889,13 +891,11 @@ function initCalculator() {
         return;
       }
 
-      // Als de uiterlijke terugkeerdatum vóór of op de laatste startdatum valt,
-      // dan is de 365-dagenregel wél relevant.
       if (todayParts.utcMs <= returnDeadlineParts.utcMs) {
         setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
         setOutput(
           "return-status-description",
-          `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${formatDateParts(returnDeadlineParts)} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+          `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
         );
         showReturnStatusIcon("return-needed");
         return;
@@ -909,7 +909,7 @@ function initCalculator() {
       setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
       setOutput(
         "return-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Om in aanmerking te komen, moet je uiterlijk op ${formatDateParts(returnDeadlineParts)} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       showReturnStatusIcon("return-needed");
       return;
@@ -1100,10 +1100,9 @@ function initCalculator() {
       const returnDeadlineText = formatDateParts(returnDeadlineParts);
 
       setOutput("return-deadline", returnDeadlineText);
-      setOutput("return-deadline-text", `Uiterste terugkeerdatum Paraguay: ${returnDeadlineText}`);
       setOutput(
-        "return-deadline-status",
-        `Je moet uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay om niet langer dan 365 opeenvolgende dagen buiten Paraguay te zijn.`
+        "return-deadline-text",
+        `Je uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel.`
       );
 
       return returnDeadlineParts;
@@ -1111,7 +1110,6 @@ function initCalculator() {
 
     setOutput("return-deadline", "-");
     setOutput("return-deadline-text", "Uiterste terugkeerdatum Paraguay: -");
-    setOutput("return-deadline-status", "Nog niet berekend.");
     return null;
   }
 
@@ -1132,7 +1130,6 @@ function initCalculator() {
     setOutput("last-departure-paraguay", "-");
     setOutput("return-deadline", "-");
     setOutput("return-deadline-text", "Uiterste terugkeerdatum Paraguay: -");
-    setOutput("return-deadline-status", "Nog niet berekend.");
     resetReturnStatusOutputs();
     setTripValidationMessage([]);
     const wrap = document.querySelector('[data-step3-date-error="wrap"]');
