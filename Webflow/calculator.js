@@ -831,9 +831,80 @@ function initCalculator() {
 
   function updateReturnStatusFromStep3(issueDateParts, returnDeadlineParts, earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
+    const departureChoice = getSelectedDepartureChoice();
+    const returnedChoice = getSelectedExtraTripsChoice();
 
-    if (!issueDateParts || !returnDeadlineParts || !earliestStartParts || !idealLatestStartParts || !latestStartParts || !todayParts) {
+    if (!issueDateParts || !earliestStartParts || !idealLatestStartParts || !latestStartParts || !todayParts) {
       resetReturnStatusOutputs();
+      return;
+    }
+
+    // Stap 4 = Nee: gebruiker is nog niet teruggekeerd naar Paraguay
+    if (departureChoice === "yes" && returnedChoice === "no" && returnDeadlineParts) {
+      const returnDeadlineAfterLatestStart =
+        returnDeadlineParts.utcMs > latestStartParts.utcMs;
+
+      // Als de uiterlijke terugkeerdatum later valt dan de laatste startdatum,
+      // tonen we alleen de aanvraagperiode. De terugkeerregel is dan niet relevant voor deze output.
+      if (returnDeadlineAfterLatestStart) {
+        if (todayParts.utcMs < earliestStartParts.utcMs) {
+          setOutput("return-status-title", "Nog niet beschikbaar");
+          setOutput(
+            "return-status-description",
+            `Je aanvraagperiode voor permanente verblijfsvergunning is nog niet geopend. Je kunt je aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+          );
+          showReturnStatusIcon("return-needed");
+          return;
+        }
+
+        if (
+          todayParts.utcMs >= earliestStartParts.utcMs &&
+          todayParts.utcMs <= idealLatestStartParts.utcMs
+        ) {
+          setOutput("return-status-title", "Je kunt nu aanvragen");
+          setOutput(
+            "return-status-description",
+            `Goed nieuws! Je aanvraagperiode is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+          );
+          showReturnStatusIcon("can-start");
+          return;
+        }
+
+        if (
+          todayParts.utcMs > idealLatestStartParts.utcMs &&
+          todayParts.utcMs <= latestStartParts.utcMs
+        ) {
+          setOutput("return-status-title", "Je kunt nu aanvragen");
+          setOutput(
+            "return-status-description",
+            `Je kunt je aanvraag voor permanente verblijfsvergunning nog steeds starten, maar niet meer binnen de ideale periode zonder boete. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+          );
+          showReturnStatusIcon("can-start");
+          return;
+        }
+
+        setOutput("return-status-title", "Aanvraagperiode verstreken");
+        setOutput(
+          "return-status-description",
+          `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+        );
+        showReturnStatusIcon("too-late");
+        return;
+      }
+
+      // Als de uiterlijke terugkeerdatum vóór of op de laatste startdatum valt,
+      // dan is de 365-dagenregel wél relevant.
+      if (todayParts.utcMs <= returnDeadlineParts.utcMs) {
+        setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
+        setOutput(
+          "return-status-description",
+          `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${formatDateParts(returnDeadlineParts)} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        );
+        showReturnStatusIcon("return-needed");
+        return;
+      }
+
+      showPermanentBlockedByVisitDeadline(returnDeadlineParts, earliestStartParts);
       return;
     }
 
@@ -1225,9 +1296,16 @@ function initCalculator() {
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
 
+    const returnDeadlineAfterLatestStart =
+      returnDeadlineParts && latestStartParts && returnDeadlineParts.utcMs > latestStartParts.utcMs;
+
     const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts);
 
-    if (returnDeadlineOverstayCheck.applicable && returnDeadlineOverstayCheck.blocked) {
+    if (
+      !returnDeadlineAfterLatestStart &&
+      returnDeadlineOverstayCheck.applicable &&
+      returnDeadlineOverstayCheck.blocked
+    ) {
       showPermanentBlockedByVisitDeadline(returnDeadlineParts, earliestStartParts);
       updateTripOutputs();
       updateStepIcons(issueDateParts);
