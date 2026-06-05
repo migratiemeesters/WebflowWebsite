@@ -850,7 +850,7 @@ function initCalculator() {
           setOutput("return-status-title", "Nog niet beschikbaar");
           setOutput(
             "return-deadline-text",
-            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ${formatDateParts(earliestStartParts)} en loopt zonder boete tot en met ${formatDateParts(idealLatestStartParts)}.`
+            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ${formatDateParts(earliestStartParts)} en loopt, zonder boete, tot en met ${formatDateParts(idealLatestStartParts)}.`
           );
           setOutput(
             "return-status-description",
