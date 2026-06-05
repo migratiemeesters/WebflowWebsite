@@ -849,8 +849,12 @@ function initCalculator() {
         if (todayParts.utcMs < earliestStartParts.utcMs) {
           setOutput("return-status-title", "Nog niet beschikbaar");
           setOutput(
+            "return-deadline-text",
+            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ${formatDateParts(earliestStartParts)} en loopt zonder boete tot en met ${formatDateParts(idealLatestStartParts)}.`
+          );
+          setOutput(
             "return-status-description",
-            `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt je aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}. Je uiterlijke terugkeerdatum is ${returnDeadlineText}, je hoeft alleen op tijd terug te komen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
+            `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt je aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Je uiterste terugkeerdatum is ${returnDeadlineText}, je moet dus vóór deze datum terug komen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
           );
           showReturnStatusIcon("return-needed");
           return;
@@ -979,8 +983,6 @@ function initCalculator() {
       };
     }
 
-    // Als de uiterlijke terugkeerdatum later valt dan de laatste startdatum,
-    // dan is de terugkeerregel niet van toepassing op de output/blokkade.
     if (returnDeadlineParts.utcMs > latestStartParts.utcMs) {
       return {
         applicable: false,
