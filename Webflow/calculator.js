@@ -854,7 +854,7 @@ function initCalculator() {
           );
           setOutput(
             "return-status-description",
-            `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt je aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Je uiterste terugkeerdatum is ${returnDeadlineText}, je moet dus vóór deze datum terug komen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
+            `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt de aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Je uiterste terugkeerdatum is ${returnDeadlineText}, je moet dus vóór deze datum terug komen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
           );
           showReturnStatusIcon("return-needed");
           return;
