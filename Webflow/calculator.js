@@ -898,6 +898,10 @@ function initCalculator() {
       if (todayParts.utcMs <= returnDeadlineParts.utcMs) {
         setOutput("return-status-title", "Terugkeer naar Paraguay nodig");
         setOutput(
+          "return-deadline-text",
+          `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Je moet uiterlijk op deze datum terugkeren om binnen de 365-dagenregel te blijven. Daarna kun je de aanvraag voor je permanente verblijfsvergunning starten vanaf ${formatDateParts(earliestStartParts)}.`
+        );
+        setOutput(
           "return-status-description",
           `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
         );
