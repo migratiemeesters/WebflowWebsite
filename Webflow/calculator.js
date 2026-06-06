@@ -927,10 +927,10 @@ function initCalculator() {
       todayParts.utcMs >= earliestStartParts.utcMs &&
       todayParts.utcMs <= idealLatestStartParts.utcMs
     ) {
-      setOutput("return-status-title", "Je kunt nu aanvragen");
+      setOutput("return-status-title", "Aanvraagperiode geopend");
       setOutput(
         "return-status-description",
-        `Goed nieuws! Je aanvraagperiode voor de permanente verblijfsvergunning is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt de aanvraag voor je permanente verblijfsvergunning starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
       );
       showReturnStatusIcon("can-start");
       return;
