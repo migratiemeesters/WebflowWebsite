@@ -460,8 +460,10 @@ function initCalculator() {
         if (extraTripsChoice === "yes") {
           showBlock(step5Wrap);
 
-          if (hasVisibleTripWithReturnDate()) {
+          if (canShowStep4YesResult()) {
             showBlock(step4FollowupYes);
+          } else {
+            hide(step4FollowupYes);
           }
         }
 
@@ -494,6 +496,14 @@ function initCalculator() {
     return getVisibleTrips().some((card) => {
       return !!getTripReturnDateParts(card);
     });
+  }
+
+  function canShowStep4YesResult() {
+    if (!hasVisibleTripWithReturnDate()) return false;
+
+    const tripChain = buildTripChain();
+
+    return !tripChain.messages.length;
   }
 
   function hasStartedTripCard(card) {
