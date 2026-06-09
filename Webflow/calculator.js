@@ -615,7 +615,7 @@ function initCalculator() {
       }
 
       if (!returnParts && nextDepartureParts) {
-        const msg = `Reis ${cardNumber}: vul eerst een geldige inreisdatum in.`;
+        const msg = `Vul eerst een geldige inreisdatum in.`;
         messages.push(msg);
         showTripError(card, msg, "return");
         chainStopped = true;
@@ -623,7 +623,7 @@ function initCalculator() {
       }
 
       if (returnParts.utcMs < previousDeparture.utcMs) {
-        const msg = `De inreisdatum kan niet vóór je vorige vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
+        const msg = `De inreisdatum kan niet vóór je eerste vertrek uit Paraguay liggen.`;
         messages.push(msg);
         showTripError(card, msg, "return");
         chainStopped = true;
@@ -643,7 +643,7 @@ function initCalculator() {
       }
 
       if (nextDepartureParts.utcMs < returnParts.utcMs) {
-        const msg = `Reis ${cardNumber}: de vertrekdatum kan niet vóór de inreisdatum liggen.`;
+        const msg = `De vertrekdatum kan niet vóór de inreisdatum liggen.`;
         messages.push(msg);
         showTripError(card, msg, "departure");
         chainStopped = true;
