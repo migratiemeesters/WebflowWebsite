@@ -612,7 +612,7 @@ function initCalculator() {
       }
 
       if (returnParts.utcMs < previousDeparture.utcMs) {
-        const msg = `Reis ${cardNumber}: de inreisdatum kan niet vóór je vorige vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
+        const msg = `De inreisdatum kan niet vóór je eerste vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
         messages.push(msg);
         showTripError(card, msg, "return");
         chainStopped = true;
