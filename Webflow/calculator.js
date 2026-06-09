@@ -259,31 +259,42 @@ function initCalculator() {
     );
   }
 
-  function getTripErrorElement(card) {
-    return card.querySelector('[data-trip-error="message"]');
+  function getTripErrorElements(card, type = "return") {
+    const messageAttr = type === "departure" ? "departure-message" : "return-message";
+    const textAttr = type === "departure" ? "departure-text" : "return-text";
+
+    return {
+      wrap: card.querySelector(`[data-trip-error="${messageAttr}"]`),
+      text: card.querySelector(`[data-trip-error="${textAttr}"]`)
+    };
   }
 
-  function getTripErrorTextElement(card) {
-    return card.querySelector('[data-trip-error="text"]');
-  }
+  function showTripError(card, message, type = "return") {
+    const { wrap, text } = getTripErrorElements(card, type);
 
-  function showTripError(card, message) {
-    const wrap = getTripErrorElement(card);
-    const text = getTripErrorTextElement(card);
     if (!wrap || !text) return;
+
     text.textContent = message;
     wrap.hidden = false;
-    wrap.style.display = "block";
+    wrap.style.display = "flex";
+
     card.classList.add("has-trip-error");
   }
 
   function clearTripError(card) {
-    const wrap = getTripErrorElement(card);
-    const text = getTripErrorTextElement(card);
-    if (!wrap || !text) return;
-    text.textContent = "";
-    wrap.hidden = true;
-    wrap.style.display = "none";
+    card.querySelectorAll(
+      '[data-trip-error="return-message"], [data-trip-error="departure-message"]'
+    ).forEach((wrap) => {
+      wrap.hidden = true;
+      wrap.style.display = "none";
+    });
+
+    card.querySelectorAll(
+      '[data-trip-error="return-text"], [data-trip-error="departure-text"]'
+    ).forEach((text) => {
+      text.textContent = "";
+    });
+
     card.classList.remove("has-trip-error");
   }
 
@@ -612,7 +623,7 @@ function initCalculator() {
       }
 
       if (returnParts.utcMs < previousDeparture.utcMs) {
-        const msg = `De inreisdatum kan niet vóór je eerste vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
+        const msg = `De inreisdatum kan niet vóór je vorige vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
         messages.push(msg);
         showTripError(card, msg, "return");
         chainStopped = true;
@@ -626,8 +637,6 @@ function initCalculator() {
         daysOutside: daysBetweenParts(previousDeparture, returnParts)
       });
 
-      // Vertrekdatum is optioneel.
-      // Als er geen vertrekdatum is ingevuld, stopt de keten hier.
       if (!nextDepartureParts) {
         chainStopped = true;
         continue;
