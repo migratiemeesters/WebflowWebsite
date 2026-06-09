@@ -582,9 +582,9 @@ function initCalculator() {
 
       if (chainStopped) {
         if (hasStartedTripCard(card)) {
-          const msg = `Extra reis ${cardNumber} kan pas worden ingevuld nadat de vorige reis volledig is ingevuld.`;
+          const msg = `Reis ${cardNumber} kan pas worden ingevuld nadat de vorige reis volledig is ingevuld.`;
           messages.push(msg);
-          showTripError(card, msg);
+          showTripError(card, msg, "return");
         }
         continue;
       }
@@ -604,25 +604,17 @@ function initCalculator() {
       }
 
       if (!returnParts && nextDepartureParts) {
-        const msg = `Extra reis ${cardNumber}: vul eerst een geldige Inreisdatum in.`;
+        const msg = `Reis ${cardNumber}: vul eerst een geldige inreisdatum in.`;
         messages.push(msg);
-        showTripError(card, msg);
+        showTripError(card, msg, "return");
         chainStopped = true;
         continue;
       }
 
       if (returnParts.utcMs < previousDeparture.utcMs) {
-        const msg = `Extra reis ${cardNumber}: Inreisdatum ligt vóór het vorige vertrek uit Paraguay.`;
+        const msg = `Reis ${cardNumber}: de inreisdatum kan niet vóór je vorige vertrek uit Paraguay liggen. Controleer de datum waarop je Paraguay weer bent binnengekomen.`;
         messages.push(msg);
-        showTripError(card, msg);
-        chainStopped = true;
-        continue;
-      }
-
-      if (nextDepartureParts.utcMs < returnParts.utcMs) {
-        const msg = `Extra reis ${cardNumber}: Vertrekdatum kan niet vóór de Inreisdatum liggen.`;
-        messages.push(msg);
-        showTripError(card, msg);
+        showTripError(card, msg, "return");
         chainStopped = true;
         continue;
       }
@@ -633,6 +625,21 @@ function initCalculator() {
         to: returnParts,
         daysOutside: daysBetweenParts(previousDeparture, returnParts)
       });
+
+      // Vertrekdatum is optioneel.
+      // Als er geen vertrekdatum is ingevuld, stopt de keten hier.
+      if (!nextDepartureParts) {
+        chainStopped = true;
+        continue;
+      }
+
+      if (nextDepartureParts.utcMs < returnParts.utcMs) {
+        const msg = `Reis ${cardNumber}: de vertrekdatum kan niet vóór de inreisdatum liggen.`;
+        messages.push(msg);
+        showTripError(card, msg, "departure");
+        chainStopped = true;
+        continue;
+      }
 
       previousDeparture = nextDepartureParts;
     }
