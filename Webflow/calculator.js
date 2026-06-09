@@ -723,7 +723,7 @@ function initCalculator() {
     const departureDateParts = getDepartureDateParts();
     const followupAnswered = isFollowupQuestionAnswered();
     const extraTripsAnswered = isExtraTripsQuestionAnswered();
-    const step5Complete = hasVisibleTripWithReturnDate();
+    const step5Complete = canShowStep4YesResult();
 
     setStepComplete(1, !!issueDateParts);
     setStepComplete(2, !!issueDateParts && isDepartureQuestionAnswered());
