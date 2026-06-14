@@ -840,7 +840,7 @@ function initCalculator() {
       setOutput("step3-no-status-title", "Je kunt nu aanvragen");
       setOutput(
         "step3-no-status-description",
-        `Goed nieuws! Je aanvraagperiode voor de permanente verblijfsvergunning is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       showStep3NoStatusIcon("can-start");
       return;
@@ -1029,7 +1029,7 @@ function initCalculator() {
       setOutput("final-status-title", "Nog niet beschikbaar");
       setOutput(
         "final-status-description",
-        `Je bent op tijd teruggekeerd naar Paraguay. Je aanvraagperiode voor permanente verblijfsvergunning is alleen nog niet geopend. Je kunt de aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
+        `Je bent op tijd teruggekeerd naar Paraguay. De aanvraagperiode voor je permanente verblijfsvergunning is alleen nog niet geopend. Je kunt de aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
       );
       setOutput("final-status-cta", "Plan je aanvraag");
       setOutput(
@@ -1047,7 +1047,7 @@ function initCalculator() {
       setOutput("final-status-title", "Je kunt nu aanvragen");
       setOutput(
         "final-status-description",
-        `Goed nieuws! Je bent op tijd teruggekeerd naar Paraguay en je aanvraagperiode voor permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met je aanvraag. Je kunt zonder boete aanvragen tot en met ${formatDateParts(idealLatestStartParts)}. Daarna kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
+        `Je bent op tijd teruggekeerd naar Paraguay en de aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met je aanvraag. Je kunt zonder boete aanvragen tot en met ${formatDateParts(idealLatestStartParts)}. Daarna kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
       );
       setOutput("final-status-cta", "Aanvraag starten");
       setOutput(
@@ -1144,12 +1144,12 @@ function initCalculator() {
     if (periodNotOpenYet) {
       setOutput(
         "return-status-description",
-        `Je aanvraagperiode voor permanente verblijfsvergunning is nog niet geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk zodra je aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk zodra de aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
       );
     } else {
       setOutput(
         "return-status-description",
-        `Je aanvraagperiode voor permanente verblijfsvergunning is geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
       );
     }
 
@@ -1158,7 +1158,7 @@ function initCalculator() {
     setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
     setOutput(
       "pr-current-status-description",
-      `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang naar permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang van een tijdelijke verblijfsvergunning naar een permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
     setOutput("pr-current-status-cta", "Tijdelijke verblijfsvergunning verlengen");
     showPrStatusIcon("too-late");
@@ -1197,7 +1197,7 @@ function initCalculator() {
       setOutput("pr-current-status-title", "Je kunt nu aanvragen");
       setOutput(
         "pr-current-status-description",
-        `Goed nieuws! Je aanvraagperiode is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `Je aanvraagperiode is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("pr-current-status-cta", "Aanvraag starten");
       showPrStatusIcon("can-start");
