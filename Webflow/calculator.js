@@ -821,7 +821,7 @@ function initCalculator() {
       todayParts.utcMs > idealLatestStartParts.utcMs &&
       todayParts.utcMs <= latestStartParts.utcMs
     ) {
-      setOutput("step3-no-status-title", "Je kunt nu aanvragen");
+      setOutput("step3-no-status-title", "Je kunt nu aanvragen met boete");
       setOutput(
         "step3-no-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar niet meer binnen de ideale periode zonder boete. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
@@ -1181,7 +1181,7 @@ function initCalculator() {
       setOutput("pr-current-status-title", "Je kunt nu aanvragen");
       setOutput(
         "pr-current-status-description",
-        `Je kunt je aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar niet meer binnen de ideale periode zonder boete. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar niet meer binnen de ideale periode zonder boete. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("pr-current-status-cta", "Aanvraag starten");
       showPrStatusIcon("can-start");
