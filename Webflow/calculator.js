@@ -784,6 +784,8 @@ function initCalculator() {
     hideAllReturnStatusIcons();
   }
 
+// STEP 3 = NO
+
   function updateStep3NoStatusDescription(issueDateParts, visitDeadlineParts, earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
 
@@ -796,7 +798,7 @@ function initCalculator() {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
       setOutput(
         "step3-no-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(latestStartParts)} kun je je aanvraag starten zonder boete.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(latestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       showStep3NoStatusIcon("return-needed");
       return;
@@ -838,7 +840,7 @@ function initCalculator() {
     setOutput("step3-no-status-title", "Aanvraagperiode verstreken");
     setOutput(
       "step3-no-status-description",
-      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}. Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
     showStep3NoStatusIcon("too-late");
   }
@@ -1138,6 +1140,8 @@ function initCalculator() {
       `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay.`
     );
   }
+
+// STEP 3 = JA
 
   function updatePrCurrentStatus(earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
