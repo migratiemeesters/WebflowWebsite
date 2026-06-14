@@ -784,37 +784,6 @@ function initCalculator() {
     hideAllReturnStatusIcons();
   }
 
-  function updateStep3JaStatusDescription(earliest, ideal, latest, returnDeadlineParts) {
-    const today = getTodayDateParts();
-    hideAllStep3NoStatusIcons();
-
-    if (today.utcMs < earliest.utcMs) {
-      setOutput("step3-ja-status-title", "Nog even wachten");
-      setOutput(
-        "step3-ja-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Je moet uiterlijk op ${formatDateParts(returnDeadlineParts)} terugkeren naar Paraguay om binnen de 365-dagenregel te blijven. Daarna start je aanvraagperiode op ${formatDateParts(earliest)}.`
-      );
-    } else if (today.utcMs <= ideal.utcMs) {
-      setOutput("step3-ja-status-title", "Je kunt nu aanvragen");
-      setOutput(
-        "step3-ja-status-description",
-        `Goed nieuws! Je kunt nu starten met je aanvraag. Je uiterste terugkeerdatum was ${formatDateParts(returnDeadlineParts)}.`
-      );
-    } else if (today.utcMs <= latest.utcMs) {
-      setOutput("step3-ja-status-title", "Je kunt nu aanvragen");
-      setOutput(
-        "step3-ja-status-description",
-        `Je aanvraagperiode is gestart. Je uiterste terugkeerdatum was ${formatDateParts(returnDeadlineParts)} en houd rekening met een boete als je na ${formatDateParts(ideal)} indient.`
-      );
-    } else {
-      setOutput("step3-ja-status-title", "Periode verstreken");
-      setOutput(
-        "step3-ja-status-description",
-        `De aanvraagperiode is helaas verstreken. Je uiterste terugkeerdatum was ${formatDateParts(returnDeadlineParts)}.`
-      );
-    }
-  }
-
   function updateStep3NoStatusDescription(issueDateParts, visitDeadlineParts, earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
 
@@ -1334,13 +1303,6 @@ function initCalculator() {
         earliestStartParts,
         idealLatestStartParts,
         latestStartParts
-      );
-    } else if (departureChoice === "yes" && returnDeadlineParts) {
-      updateStep3JaStatusDescription(
-        earliestStartParts,
-        idealLatestStartParts,
-        latestStartParts,
-        returnDeadlineParts
       );
     } else {
       resetStep3NoStatusOutputs();
