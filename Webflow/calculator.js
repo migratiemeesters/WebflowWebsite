@@ -919,7 +919,7 @@ function initCalculator() {
         setOutput("return-status-title", "Aanvraagperiode verstreken");
         setOutput(
           "return-deadline-text",
-          `De uiterste terugkeerdatum naar Paraguay was ${returnDeadlineText}. Hoewel deze terugkeerdatum relevant is voor de 365-dagenregel, is de aanvraagperiode voor je permanente verblijfsvergunning inmiddels verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}.`
+          `De uiterste terugkeerdatum naar Paraguay was ${returnDeadlineText}. Hoewel deze terugkeerdatum relevant is voor de 365-dagenregel, is de aanvraagperiode voor je permanente verblijfsvergunning inmiddels verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}.`
         );
         setOutput(
           "return-status-description",
