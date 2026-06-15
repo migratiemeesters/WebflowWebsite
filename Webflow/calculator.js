@@ -822,7 +822,7 @@ function initCalculator() {
       todayParts.utcMs > idealLatestStartParts.utcMs &&
       todayParts.utcMs <= latestStartParts.utcMs
     ) {
-      setOutput("step3-no-status-title", "Je kunt nu aanvragen met boete");
+      setOutput("step3-no-status-title", "Je kunt nu aanvragen met een boete");
       setOutput(
         "step3-no-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
@@ -1176,7 +1176,7 @@ function initCalculator() {
       setOutput("pr-current-status-title", "Je kunt nu aanvragen");
       setOutput(
         "pr-current-status-description",
-        `Je aanvraagperiode is gestart. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("pr-current-status-cta", "Aanvraag starten");
       showPrStatusIcon("can-start");
@@ -1184,7 +1184,7 @@ function initCalculator() {
     }
 
     if (todayParts.utcMs > idealLatestStartParts.utcMs && todayParts.utcMs <= latestStartParts.utcMs) {
-      setOutput("pr-current-status-title", "Je kunt nu aanvragen met boete");
+      setOutput("pr-current-status-title", "Je kunt nu aanvragen met een boete");
       setOutput(
         "pr-current-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
