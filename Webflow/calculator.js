@@ -841,7 +841,9 @@ function initCalculator() {
     setOutput("step3-no-status-title", "Aanvraagperiode verstreken");
     setOutput(
       "step3-no-status-description",
-      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}. Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}. 
+
+      Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
     showStep3NoStatusIcon("too-late");
   }
@@ -1202,7 +1204,9 @@ function initCalculator() {
     setOutput("pr-current-status-title", "Aanvraagperiode verstreken");
     setOutput(
       "pr-current-status-description",
-      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. 
+
+      Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
     setOutput("pr-current-status-cta", "Bespreek je situatie");
     showPrStatusIcon("too-late");
