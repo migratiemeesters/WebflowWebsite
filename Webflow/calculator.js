@@ -367,7 +367,50 @@ function initCalculator() {
   }
 
 
+  function resetFinsweetDateDropdown(dropdown) {
+    const select = dropdown.querySelector("select");
 
+    if (!select || !select.options.length) return;
+
+    const initialOptionText = String(
+      select.options[0].textContent || ""
+    ).trim();
+
+    const optionLinks = Array.from(
+      dropdown.querySelectorAll(".date-custom-field_link-block")
+    );
+
+    const initialOptionLink = optionLinks.find((link) => {
+      const textElement = link.querySelector(
+        ".date-custom-field_link-text"
+      );
+
+      const optionText = String(
+        textElement?.textContent || link.textContent || ""
+      ).trim();
+
+      return optionText === initialOptionText;
+    });
+
+    if (initialOptionLink) {
+      initialOptionLink.click();
+    }
+  }
+
+  function resetStep5CustomDateFields() {
+    document
+      .querySelectorAll('[data-trip-card="item"]')
+      .forEach((trip) => {
+        trip
+          .querySelectorAll(".date-dropdown")
+          .forEach(resetFinsweetDateDropdown);
+
+        clearTripError(trip);
+      });
+
+    setTripValidationMessage([]);
+    resetFinalStatusOutputs();
+  }
 
 
   
@@ -1498,34 +1541,32 @@ updateStepIcons(issueDateParts);
 
   bindTripRecalculation();
 
-[
-  '[data-departure-toggle="yes"]',
-  '[data-departure-toggle="no"]',
-  '[data-followup-toggle="yes"]',
-  '[data-followup-toggle="no"]',
-  '[data-extra-trips-toggle="yes"]',
-  '[data-extra-trips-toggle="no"]'
-].forEach((selector) => {
-  const el = document.querySelector(selector);
+  [
+    '[data-departure-toggle="yes"]',
+    '[data-departure-toggle="no"]',
+    '[data-followup-toggle="yes"]',
+    '[data-followup-toggle="no"]',
+    '[data-extra-trips-toggle="yes"]',
+    '[data-extra-trips-toggle="no"]'
+  ].forEach((selector) => {
+    const el = document.querySelector(selector);
 
-  if (!el) return;
+    if (!el) return;
 
-  el.addEventListener("change", () => {
-    if (
-      selector === '[data-extra-trips-toggle="no"]' &&
-      el.checked
-    ) {
-      resetTripCardData();
-      resetFinalStatusOutputs();
-      setTripValidationMessage([]);
-    }
+    el.addEventListener("change", () => {
+      if (
+        selector === '[data-extra-trips-toggle="no"]' &&
+        el.checked
+      ) {
+        resetStep5CustomDateFields();
+      }
 
-    calculateTemporaryResidencyDates();
+      calculateTemporaryResidencyDates();
+    });
   });
-});
 
-calculateTemporaryResidencyDates();
-}
+  calculateTemporaryResidencyDates();
+  }
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCalculator);
