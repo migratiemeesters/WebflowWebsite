@@ -399,7 +399,6 @@ function initCalculator() {
     }
   }
 
-
   function resetStep5TripValues() {
     const fields = [
       ["return", "day", "Dag"],
@@ -431,12 +430,10 @@ function initCalculator() {
           dropdown?.querySelector("select") ||
           source.querySelector("select");
 
-        // Reset the underlying select without triggering events.
         if (nativeSelect && nativeSelect.options.length) {
           nativeSelect.selectedIndex = 0;
         }
 
-        // Reset only the visible selected value.
         if (
           visibleText &&
           visibleText.textContent.trim() !== placeholder
@@ -451,11 +448,6 @@ function initCalculator() {
     setTripValidationMessage([]);
     resetFinalStatusOutputs();
   }
-
-
-
-
-  
 
   function resetTripCardData() {
     document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
@@ -472,10 +464,6 @@ function initCalculator() {
       hide(trip);
     });
   }
-
-
-
-
 
   function shouldShowStep4(issueDateParts) {
     if (!issueDateParts) return false;
@@ -1583,7 +1571,6 @@ updateStepIcons(issueDateParts);
 
   bindTripRecalculation();
 
-
   [
     '[data-departure-toggle="yes"]',
     '[data-departure-toggle="no"]',
@@ -1599,8 +1586,6 @@ updateStepIcons(issueDateParts);
     el.addEventListener("change", () => {
       if (!el.checked) return;
 
-      // Step 4 = Nee:
-      // remember that the Step 5 values must be cleared.
       if (selector === '[data-extra-trips-toggle="no"]') {
         resetStep5OnNextOpen = true;
         resetFinalStatusOutputs();
@@ -1610,8 +1595,6 @@ updateStepIcons(issueDateParts);
         return;
       }
 
-      // Step 4 = Ja:
-      // clear the previous Step 5 values before reopening Step 5.
       if (
         selector === '[data-extra-trips-toggle="yes"]' &&
         resetStep5OnNextOpen
@@ -1626,8 +1609,6 @@ updateStepIcons(issueDateParts);
 
   calculateTemporaryResidencyDates();
   }
-
-
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCalculator);
