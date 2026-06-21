@@ -1491,21 +1491,35 @@ updateStepIcons(issueDateParts);
 
   bindTripRecalculation();
 
-  [
-    '[data-departure-toggle="yes"]',
-    '[data-departure-toggle="no"]',
-    '[data-followup-toggle="yes"]',
-    '[data-followup-toggle="no"]',
-    '[data-extra-trips-toggle="yes"]',
-    '[data-extra-trips-toggle="no"]'
-  ].forEach((selector) => {
-    const el = document.querySelector(selector);
-    if (el) {
-      el.addEventListener("change", calculateTemporaryResidencyDates);
-    }
-  });
+[
+  '[data-departure-toggle="yes"]',
+  '[data-departure-toggle="no"]',
+  '[data-followup-toggle="yes"]',
+  '[data-followup-toggle="no"]',
+  '[data-extra-trips-toggle="yes"]',
+  '[data-extra-trips-toggle="no"]'
+].forEach((selector) => {
+  const el = document.querySelector(selector);
 
-  calculateTemporaryResidencyDates();
+  if (!el) return;
+
+  el.addEventListener("change", () => {
+    // When Step 4 changes from Ja to Nee,
+    // clear all previously entered Step 5 trip data.
+    if (
+      selector === '[data-extra-trips-toggle="no"]' &&
+      el.checked
+    ) {
+      resetTripCardData();
+      resetFinalStatusOutputs();
+      setTripValidationMessage([]);
+    }
+
+    calculateTemporaryResidencyDates();
+  });
+});
+
+calculateTemporaryResidencyDates();
 }
 
 if (document.readyState === "loading") {
