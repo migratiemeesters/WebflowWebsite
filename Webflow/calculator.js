@@ -366,11 +366,47 @@ function initCalculator() {
     clearStep3DateError();
   }
 
+  function resetTripDateSource(trip, group, part, placeholder) {
+    const source = trip.querySelector(
+      `:scope [data-trip-group="${group}"] [data-tempres-source="${part}"]`
+    );
+
+    if (!source) return;
+
+    const field = source.matches("input, select, textarea")
+      ? source
+      : source.querySelector("input, select, textarea");
+
+    if (field) {
+      if (field.type === "checkbox" || field.type === "radio") {
+        field.checked = false;
+      } else if (field.tagName === "SELECT") {
+        field.selectedIndex = 0;
+      } else {
+        field.value = "";
+      }
+
+      return;
+    }
+
+    source.textContent = placeholder;
+  }
+
   function resetTripCardData() {
     document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+      resetTripDateSource(trip, "return", "day", "Dag");
+      resetTripDateSource(trip, "return", "month", "Maand");
+      resetTripDateSource(trip, "return", "year", "Jaar");
+
+      resetTripDateSource(trip, "departure", "day", "Dag");
+      resetTripDateSource(trip, "departure", "month", "Maand");
+      resetTripDateSource(trip, "departure", "year", "Jaar");
+
       trip.querySelectorAll("input, select, textarea").forEach((field) => {
         if (field.type === "checkbox" || field.type === "radio") {
           field.checked = false;
+        } else if (field.tagName === "SELECT") {
+          field.selectedIndex = 0;
         } else {
           field.value = "";
         }
