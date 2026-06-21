@@ -368,37 +368,6 @@ function initCalculator() {
     clearStep3DateError();
   }
 
-
-  function resetFinsweetDateDropdown(dropdown) {
-    const select = dropdown.querySelector("select");
-
-    if (!select || !select.options.length) return;
-
-    const initialOptionText = String(
-      select.options[0].textContent || ""
-    ).trim();
-
-    const optionLinks = Array.from(
-      dropdown.querySelectorAll(".date-custom-field_link-block")
-    );
-
-    const initialOptionLink = optionLinks.find((link) => {
-      const textElement = link.querySelector(
-        ".date-custom-field_link-text"
-      );
-
-      const optionText = String(
-        textElement?.textContent || link.textContent || ""
-      ).trim();
-
-      return optionText === initialOptionText;
-    });
-
-    if (initialOptionLink) {
-      initialOptionLink.click();
-    }
-  }
-
   function resetStep5TripValues() {
     const fields = [
       ["return", "day", "Dag"],
