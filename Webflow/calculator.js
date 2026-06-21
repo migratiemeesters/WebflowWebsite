@@ -1504,8 +1504,6 @@ updateStepIcons(issueDateParts);
   if (!el) return;
 
   el.addEventListener("change", () => {
-    // When Step 4 changes from Ja to Nee,
-    // clear all previously entered Step 5 trip data.
     if (
       selector === '[data-extra-trips-toggle="no"]' &&
       el.checked
