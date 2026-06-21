@@ -376,31 +376,27 @@ function initCalculator() {
 
     if (!source) return;
 
-    // Find the specific day/month/year wrapper.
-    const fieldWrapper = source.closest(
-      ".date-day-wrapper, .date-month-wrapper, .date-year-wrapper"
-    );
+    const dropdown =
+      source.matches(".date-dropdown")
+        ? source
+        : source.closest(".date-dropdown") ||
+          source.querySelector(".date-dropdown");
 
-    // Only change the visible text element.
     const visibleText =
       source.matches(".date-text")
         ? source
         : source.querySelector(".date-text") ||
-          fieldWrapper?.querySelector(".date-text");
+          dropdown?.querySelector(".date-text");
 
     if (visibleText) {
       visibleText.textContent = placeholder;
     }
 
-    // Close the custom Webflow dropdown if it is open.
-    const dropdown =
-      fieldWrapper?.querySelector(".date-dropdown") ||
-      source.closest(".date-dropdown");
+    dropdown?.classList.remove("w--open");
 
     const toggle = dropdown?.querySelector(".date-dropdown-toggle");
     const list = dropdown?.querySelector(".date-dropdown-list");
 
-    dropdown?.classList.remove("w--open");
     toggle?.classList.remove("w--open");
     list?.classList.remove("w--open");
 
@@ -408,18 +404,7 @@ function initCalculator() {
       toggle.setAttribute("aria-expanded", "false");
     }
 
-    // Remove possible selected states from the options.
-    fieldWrapper
-      ?.querySelectorAll(
-        ".date-custom-field_link-block, .date-custom-field_link, [aria-selected='true']"
-      )
-      .forEach((option) => {
-        option.classList.remove("is-selected", "w--current");
-        option.setAttribute("aria-selected", "false");
-      });
-
-    // Clear any real or hidden form field inside this custom component.
-    fieldWrapper
+    dropdown
       ?.querySelectorAll("input, select, textarea")
       .forEach((field) => {
         if (field.type === "checkbox" || field.type === "radio") {
