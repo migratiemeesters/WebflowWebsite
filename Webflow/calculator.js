@@ -14,6 +14,8 @@ function initCalculator() {
     december: 11
   };
 
+  let isResettingTripCards = false;
+
   function getSourceElement(key, scope = document) {
     return scope.querySelector(`[data-tempres-source="${key}"]`);
   }
@@ -371,24 +373,46 @@ function initCalculator() {
 
 
   
-  function resetTripCardData() {
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
-      trip.querySelectorAll("input, select, textarea").forEach((field) => {
-        if (field.type === "checkbox" || field.type === "radio") {
-          field.checked = false;
-          field.removeAttribute("checked");
-        } else if (field.tagName === "SELECT") {
-          field.selectedIndex = 0;
-        } else {
-          field.value = "";
-        }
-      });
 
-      clearTripError(trip);
-      trip.classList.remove("is-entering", "is-on-top");
-      hide(trip);
-    });
+  function resetTripCardData() {
+    if (isResettingTripCards) return;
+
+    isResettingTripCards = true;
+
+    try {
+      document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+        // Reset the real select elements used by Finsweet Custom Select.
+        trip.querySelectorAll("select").forEach((select) => {
+          select.selectedIndex = 0;
+
+          // Let Finsweet update the visible custom dropdown label.
+          select.dispatchEvent(
+            new Event("change", {
+              bubbles: true
+            })
+          );
+        });
+
+        // Reset any other normal fields.
+        trip.querySelectorAll("input, textarea").forEach((field) => {
+          if (field.type === "checkbox" || field.type === "radio") {
+            field.checked = false;
+            field.removeAttribute("checked");
+          } else {
+            field.value = "";
+          }
+        });
+
+        clearTripError(trip);
+        trip.classList.remove("is-entering", "is-on-top");
+        hide(trip);
+      });
+    } finally {
+      isResettingTripCards = false;
+    }
   }
+
+
 
 
 
@@ -1480,8 +1504,8 @@ updateStepIcons(issueDateParts);
       });
 
       trip.querySelectorAll("input, select, textarea").forEach((field) => {
-        field.addEventListener("input", calculateTemporaryResidencyDates);
-        field.addEventListener("change", calculateTemporaryResidencyDates);
+        field.addEventListener("input", () => { if (!isResettingTripCards) { calculateTemporaryResidencyDates(); } });
+        field.addEventListener("change", () => { if (!isResettingTripCards) { calculateTemporaryResidencyDates(); } });
       });
     });
 
