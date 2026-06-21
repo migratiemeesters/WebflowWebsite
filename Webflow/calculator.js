@@ -1402,9 +1402,6 @@ function initCalculator() {
     updateBranchVisibility(issueDateParts);
 
     const extraTripsChoice = getSelectedExtraTripsChoice();
-    if (extraTripsChoice === "no") {
-      resetTripCardData();
-    }
 
     setOutput("days-until-first-departure", String(daysUntilFirstDeparture));
     setOutput("visit-rule", `Eerste vertrek was ${daysUntilFirstDeparture} dagen na de afgiftedatum.`);
