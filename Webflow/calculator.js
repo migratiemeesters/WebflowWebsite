@@ -376,6 +376,9 @@ function initCalculator() {
       trip.querySelectorAll("input, select, textarea").forEach((field) => {
         if (field.type === "checkbox" || field.type === "radio") {
           field.checked = false;
+          field.removeAttribute("checked");
+        } else if (field.tagName === "SELECT") {
+          field.selectedIndex = 0;
         } else {
           field.value = "";
         }
@@ -386,6 +389,8 @@ function initCalculator() {
       hide(trip);
     });
   }
+
+
 
   function shouldShowStep4(issueDateParts) {
     if (!issueDateParts) return false;
