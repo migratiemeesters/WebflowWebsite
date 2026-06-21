@@ -14,6 +14,8 @@ function initCalculator() {
     december: 11
   };
 
+  let resetStep5OnNextOpen = false;
+
   function getSourceElement(key, scope = document) {
     return scope.querySelector(`[data-tempres-source="${key}"]`);
   }
@@ -397,20 +399,60 @@ function initCalculator() {
     }
   }
 
-  function resetStep5CustomDateFields() {
-    document
-      .querySelectorAll('[data-trip-card="item"]')
-      .forEach((trip) => {
-        trip
-          .querySelectorAll(".date-dropdown")
-          .forEach(resetFinsweetDateDropdown);
 
-        clearTripError(trip);
+  function resetStep5TripValues() {
+    const fields = [
+      ["return", "day", "Dag"],
+      ["return", "month", "Maand"],
+      ["return", "year", "Jaar"],
+      ["departure", "day", "Dag"],
+      ["departure", "month", "Maand"],
+      ["departure", "year", "Jaar"]
+    ];
+
+    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+      fields.forEach(([group, part, placeholder]) => {
+        const source = trip.querySelector(
+          `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
+        );
+
+        if (!source) return;
+
+        const dropdown =
+          source.closest(".date-dropdown") ||
+          source.querySelector(".date-dropdown");
+
+        const visibleText = source.matches(".date-text")
+          ? source
+          : dropdown?.querySelector(".date-text") ||
+            source.querySelector(".date-text");
+
+        const nativeSelect =
+          dropdown?.querySelector("select") ||
+          source.querySelector("select");
+
+        // Reset the underlying select without triggering events.
+        if (nativeSelect && nativeSelect.options.length) {
+          nativeSelect.selectedIndex = 0;
+        }
+
+        // Reset only the visible selected value.
+        if (
+          visibleText &&
+          visibleText.textContent.trim() !== placeholder
+        ) {
+          visibleText.textContent = placeholder;
+        }
       });
+
+      clearTripError(trip);
+    });
 
     setTripValidationMessage([]);
     resetFinalStatusOutputs();
   }
+
+
 
 
   
@@ -1541,6 +1583,7 @@ updateStepIcons(issueDateParts);
 
   bindTripRecalculation();
 
+
   [
     '[data-departure-toggle="yes"]',
     '[data-departure-toggle="no"]',
@@ -1554,11 +1597,27 @@ updateStepIcons(issueDateParts);
     if (!el) return;
 
     el.addEventListener("change", () => {
+      if (!el.checked) return;
+
+      // Step 4 = Nee:
+      // remember that the Step 5 values must be cleared.
+      if (selector === '[data-extra-trips-toggle="no"]') {
+        resetStep5OnNextOpen = true;
+        resetFinalStatusOutputs();
+        setTripValidationMessage([]);
+
+        calculateTemporaryResidencyDates();
+        return;
+      }
+
+      // Step 4 = Ja:
+      // clear the previous Step 5 values before reopening Step 5.
       if (
-        selector === '[data-extra-trips-toggle="no"]' &&
-        el.checked
+        selector === '[data-extra-trips-toggle="yes"]' &&
+        resetStep5OnNextOpen
       ) {
-        resetStep5CustomDateFields();
+        resetStep5OnNextOpen = false;
+        resetStep5TripValues();
       }
 
       calculateTemporaryResidencyDates();
@@ -1567,6 +1626,8 @@ updateStepIcons(issueDateParts);
 
   calculateTemporaryResidencyDates();
   }
+
+
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCalculator);
