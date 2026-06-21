@@ -369,26 +369,87 @@ function initCalculator() {
 
 
 
+  function resetCustomDateField(trip, group, part, placeholder) {
+    const source = trip.querySelector(
+      `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
+    );
 
-  
-  function resetTripCardData() {
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
-      trip.querySelectorAll("input, select, textarea").forEach((field) => {
+    if (!source) return;
+
+    // Find the specific day/month/year wrapper.
+    const fieldWrapper = source.closest(
+      ".date-day-wrapper, .date-month-wrapper, .date-year-wrapper"
+    );
+
+    // Only change the visible text element.
+    const visibleText =
+      source.matches(".date-text")
+        ? source
+        : source.querySelector(".date-text") ||
+          fieldWrapper?.querySelector(".date-text");
+
+    if (visibleText) {
+      visibleText.textContent = placeholder;
+    }
+
+    // Close the custom Webflow dropdown if it is open.
+    const dropdown =
+      fieldWrapper?.querySelector(".date-dropdown") ||
+      source.closest(".date-dropdown");
+
+    const toggle = dropdown?.querySelector(".date-dropdown-toggle");
+    const list = dropdown?.querySelector(".date-dropdown-list");
+
+    dropdown?.classList.remove("w--open");
+    toggle?.classList.remove("w--open");
+    list?.classList.remove("w--open");
+
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    // Remove possible selected states from the options.
+    fieldWrapper
+      ?.querySelectorAll(
+        ".date-custom-field_link-block, .date-custom-field_link, [aria-selected='true']"
+      )
+      .forEach((option) => {
+        option.classList.remove("is-selected", "w--current");
+        option.setAttribute("aria-selected", "false");
+      });
+
+    // Clear any real or hidden form field inside this custom component.
+    fieldWrapper
+      ?.querySelectorAll("input, select, textarea")
+      .forEach((field) => {
         if (field.type === "checkbox" || field.type === "radio") {
           field.checked = false;
-          field.removeAttribute("checked");
         } else if (field.tagName === "SELECT") {
           field.selectedIndex = 0;
         } else {
           field.value = "";
         }
       });
+  }
+
+  function resetTripCardData() {
+    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+      // Inreisdatum
+      resetCustomDateField(trip, "return", "day", "Dag");
+      resetCustomDateField(trip, "return", "month", "Maand");
+      resetCustomDateField(trip, "return", "year", "Jaar");
+
+      // Vertrekdatum
+      resetCustomDateField(trip, "departure", "day", "Dag");
+      resetCustomDateField(trip, "departure", "month", "Maand");
+      resetCustomDateField(trip, "departure", "year", "Jaar");
 
       clearTripError(trip);
       trip.classList.remove("is-entering", "is-on-top");
       hide(trip);
     });
   }
+
 
 
 
