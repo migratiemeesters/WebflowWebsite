@@ -369,72 +369,26 @@ function initCalculator() {
 
 
 
-  function resetCustomDateField(trip, group, part, placeholder) {
-    const source = trip.querySelector(
-      `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
-    );
 
-    if (!source) return;
-
-    const dropdown =
-      source.matches(".date-dropdown")
-        ? source
-        : source.closest(".date-dropdown") ||
-          source.querySelector(".date-dropdown");
-
-    const visibleText =
-      source.matches(".date-text")
-        ? source
-        : source.querySelector(".date-text") ||
-          dropdown?.querySelector(".date-text");
-
-    if (visibleText) {
-      visibleText.textContent = placeholder;
-    }
-
-    dropdown?.classList.remove("w--open");
-
-    const toggle = dropdown?.querySelector(".date-dropdown-toggle");
-    const list = dropdown?.querySelector(".date-dropdown-list");
-
-    toggle?.classList.remove("w--open");
-    list?.classList.remove("w--open");
-
-    if (toggle) {
-      toggle.setAttribute("aria-expanded", "false");
-    }
-
-    dropdown
-      ?.querySelectorAll("input, select, textarea")
-      .forEach((field) => {
+  
+  function resetTripCardData() {
+    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+      trip.querySelectorAll("input, select, textarea").forEach((field) => {
         if (field.type === "checkbox" || field.type === "radio") {
           field.checked = false;
+          field.removeAttribute("checked");
         } else if (field.tagName === "SELECT") {
           field.selectedIndex = 0;
         } else {
           field.value = "";
         }
       });
-  }
-
-  function resetTripCardData() {
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
-      // Inreisdatum
-      resetCustomDateField(trip, "return", "day", "Dag");
-      resetCustomDateField(trip, "return", "month", "Maand");
-      resetCustomDateField(trip, "return", "year", "Jaar");
-
-      // Vertrekdatum
-      resetCustomDateField(trip, "departure", "day", "Dag");
-      resetCustomDateField(trip, "departure", "month", "Maand");
-      resetCustomDateField(trip, "departure", "year", "Jaar");
 
       clearTripError(trip);
       trip.classList.remove("is-entering", "is-on-top");
       hide(trip);
     });
   }
-
 
 
 
