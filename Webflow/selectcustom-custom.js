@@ -657,46 +657,53 @@
     }
   }
 
-  /**
-   * Resets one custom select.
-   */
-  function resetCustomSelect(settings) {
-    const emptyOption =
-      settings.options.find(
-        (option) =>
-          option.value === ""
-      );
+/**
+ * Resets one custom select without dispatching
+ * input/change events for every individual field.
+ *
+ * The calculator performs one recalculation after
+ * the complete group of fields has been reset.
+ */
+    function resetCustomSelect(settings) {
+    const emptyOption = settings.options.find(
+        (option) => option.value === ""
+    );
 
     if (!emptyOption) {
-      console.warn(
+        console.warn(
         "Select Custom: no empty option exists.",
         settings.select
-      );
+        );
 
-      return;
+        return;
     }
 
+    // Reset the real native select silently.
+    settings.select.value = "";
+
+    // Update the custom dropdown UI without firing
+    // input and change events for this individual field.
     selectOption(
-      settings,
-      emptyOption,
-      true
+        settings,
+        emptyOption,
+        false
     );
 
     const isOpen =
-      settings.toggle.getAttribute(
+        settings.toggle.getAttribute(
         "aria-expanded"
-      ) === "true" ||
-      settings.list.classList.contains(
+        ) === "true" ||
+        settings.list.classList.contains(
         CLASSES.open
-      );
+        );
 
     if (isOpen) {
-      activateToggle(
+        activateToggle(
         settings.toggle,
         false
-      );
+        );
     }
-  }
+    }
 
   /**
    * Adds listeners for one custom select.
