@@ -14,8 +14,6 @@ function initCalculator() {
     december: 11
   };
 
-  let resetStep5OnNextOpen = false;
-
   function getSourceElement(key, scope = document) {
     return scope.querySelector(`[data-tempres-source="${key}"]`);
   }
@@ -1775,6 +1773,7 @@ updateStepIcons(issueDateParts);
     if (step4NoRadio) {
       step4NoRadio.addEventListener("change", function () {
         if (step4NoRadio.checked) {
+          resetStep5TripValues();
           hideAllTrips();
         }
       });
@@ -1809,20 +1808,10 @@ updateStepIcons(issueDateParts);
       if (!el.checked) return;
 
       if (selector === '[data-extra-trips-toggle="no"]') {
-        resetStep5OnNextOpen = true;
         resetFinalStatusOutputs();
         setTripValidationMessage([]);
-
         calculateTemporaryResidencyDates();
         return;
-      }
-
-      if (
-        selector === '[data-extra-trips-toggle="yes"]' &&
-        resetStep5OnNextOpen
-      ) {
-        resetStep5OnNextOpen = false;
-        resetStep5TripValues();
       }
 
       calculateTemporaryResidencyDates();
