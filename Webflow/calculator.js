@@ -196,11 +196,36 @@ function initCalculator() {
   }
 
   function addMonths(parts, monthsToAdd) {
-    const shifted = new Date(Date.UTC(parts.year, parts.month + monthsToAdd, parts.day));
+    const totalMonths =
+      parts.year * 12 +
+      parts.month +
+      monthsToAdd;
+
+    const targetYear = Math.floor(
+      totalMonths / 12
+    );
+
+    const targetMonth =
+      ((totalMonths % 12) + 12) % 12;
+
+    const lastDayOfTargetMonth =
+      new Date(
+        Date.UTC(
+          targetYear,
+          targetMonth + 1,
+          0
+        )
+      ).getUTCDate();
+
+    const targetDay = Math.min(
+      parts.day,
+      lastDayOfTargetMonth
+    );
+
     return createDateParts(
-      shifted.getUTCDate(),
-      shifted.getUTCMonth() + 1,
-      shifted.getUTCFullYear()
+      targetDay,
+      targetMonth + 1,
+      targetYear
     );
   }
 
@@ -569,31 +594,14 @@ function initCalculator() {
   }
 
   function hasStartedTripCard(card) {
-    if (!isVisible(card)) return false;
+    if (!isVisible(card)) {
+      return false;
+    }
 
-    const returnParts = getTripReturnDateParts(card);
-    const departureParts = getTripDepartureDateParts(card);
-    if (returnParts || departureParts) return true;
-
-    const fields = Array.from(card.querySelectorAll("input, select, textarea")).filter((field) => {
-      if (!isVisible(field) || field.disabled) return false;
-      if (field.type === "hidden" || field.type === "submit" || field.type === "button") return false;
-      return true;
-    });
-
-    const seenRadioNames = new Set();
-
-    return fields.some((field) => {
-      if (field.type === "radio") {
-        if (!field.name || seenRadioNames.has(field.name)) return false;
-        seenRadioNames.add(field.name);
-        const form = field.closest("form") || document;
-        return !!form.querySelector(`input[type="radio"][name="${CSS.escape(field.name)}"]:checked`);
-      }
-
-      if (field.type === "checkbox") return field.checked;
-      return String(field.value || "").trim() !== "";
-    });
+    return (
+      hasTripDateInput(card, "return") ||
+      hasTripDateInput(card, "departure")
+    );
   }
 
   function getLatestKnownDepartureDateParts() {
