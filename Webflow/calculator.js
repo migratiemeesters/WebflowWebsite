@@ -900,7 +900,7 @@ function initCalculator() {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
       setOutput(
         "step3-no-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       showStep3NoStatusIcon("return-needed");
       return;
@@ -974,11 +974,11 @@ function initCalculator() {
             "return-deadline-text",
             `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ${formatDateParts(earliestStartParts)} en loopt, zonder boete, tot en met ${formatDateParts(idealLatestStartParts)}.`
           );
+          setOutput("return-status-cta", "Plan je terugkeer");
           setOutput(
             "return-status-description",
             `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt de aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Je uiterste terugkeerdatum is ${returnDeadlineText}, je moet dus vóór deze datum terugkomen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
           );
-          setOutput("return-status-cta", "Plan je terugkeer");
           showReturnStatusIcon("return-needed");
           return;
         }
@@ -1040,6 +1040,7 @@ function initCalculator() {
           "return-status-description",
           `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Je kunt de aanvraag voor je permanente verblijfsvergunning starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
         );
+        setOutput("return-status-cta", "Plan je terugkeer");
         showReturnStatusIcon("return-needed");
         return;
       }
@@ -1096,7 +1097,7 @@ function initCalculator() {
         "final-status-description",
         `Je bent op ${firstReturnText} teruggekeerd naar Paraguay. Dat is na je uiterste terugkeerdatum van ${returnDeadlineText}. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
       );
-      setOutput("final-status-cta", "Tijdelijke verblijfsvergunning verlengen");
+      setOutput("final-status-cta", "Bespreek je situatie");
       setOutput(
         "final-return-deadline-text",
         `Je uiterste terugkeerdatum naar Paraguay was ${returnDeadlineText}. Je ingevulde inreisdatum is ${firstReturnText}. Omdat deze datum na de uiterste terugkeerdatum ligt, ben je te laat teruggekeerd.`
