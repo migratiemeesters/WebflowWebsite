@@ -386,100 +386,58 @@ function initCalculator() {
     clearStep3DateError();
   }
 
-
   function resetStep5TripValues(tripToReset = null) {
-    const fields = [
-      ["return", "day", "Dag"],
-      ["return", "month", "Maand"],
-      ["return", "year", "Jaar"],
-      ["departure", "day", "Dag"],
-      ["departure", "month", "Maand"],
-      ["departure", "year", "Jaar"]
-    ];
-
     const trips = tripToReset
       ? [tripToReset]
-      : document.querySelectorAll('[data-trip-card="item"]');
+      : getTripCards();
 
     trips.forEach((trip) => {
-      fields.forEach(([group, part, placeholder]) => {
-        const source = trip.querySelector(
-          `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
+      trip.querySelectorAll(".date-dropdown").forEach((dropdown) => {
+        const select = dropdown.querySelector("select");
+
+        if (!select) return;
+
+        // Find the native empty placeholder option.
+        const emptyOption = Array.from(select.options).find(
+          (option) => option.value === ""
         );
 
-        if (!source) return;
-
-        const dateDropdown =
-          source.closest(".date-dropdown") ||
-          source.querySelector(".date-dropdown");
-
-        const dropdown =
-          dateDropdown?.matches(".w-dropdown")
-            ? dateDropdown
-            : dateDropdown?.closest(".w-dropdown") ||
-              dateDropdown;
-
-        const visibleText = source.matches(".date-text")
-          ? source
-          : dateDropdown?.querySelector(".date-text") ||
-            source.querySelector(".date-text");
-
-        const nativeSelect =
-          dateDropdown?.querySelector("select") ||
-          source.querySelector("select");
-
-        // Reset the real native select.
-        if (nativeSelect?.options.length) {
-          Array.from(nativeSelect.options).forEach(
-            (option, index) => {
-              option.selected = index === 0;
-
-              if (index === 0) {
-                option.setAttribute("selected", "");
-              } else {
-                option.removeAttribute("selected");
-              }
-            }
+        if (!emptyOption) {
+          console.warn(
+            "No empty initial option found in date select:",
+            select
           );
-
-          nativeSelect.selectedIndex = 0;
-          nativeSelect.value =
-            nativeSelect.options[0]?.value || "";
+          return;
         }
 
-        // Reset the visible label.
-        if (visibleText) {
-          visibleText.textContent = placeholder;
-        }
+        const emptyOptionText = emptyOption.textContent
+          .trim()
+          .toLowerCase();
 
-        // Remove the ghost selected state.
-        dropdown
-          ?.querySelectorAll(
-            ".w-dropdown-link, .date-custom-field_link-block"
+        const optionLinks = Array.from(
+          dropdown.querySelectorAll(
+            ".date-dropdown-list .date-custom-field_link-block"
           )
-          .forEach((optionLink) => {
-            optionLink.classList.remove("w--current");
-            optionLink.classList.remove("is-selected");
-            optionLink.removeAttribute("aria-current");
-            optionLink.setAttribute("aria-selected", "false");
-          });
-
-        // Close the dropdown if it was open when X was clicked.
-        dropdown?.classList.remove("w--open");
-
-        const toggle = dropdown?.querySelector(
-          ".w-dropdown-toggle, .date-dropdown-toggle"
         );
 
-        const list = dropdown?.querySelector(
-          ".w-dropdown-list, .date-dropdown-list"
-        );
+        // Find the generated Finsweet link that represents
+        // the empty native option.
+        const emptyOptionLink = optionLinks.find((link) => {
+          return (
+            link.textContent.trim().toLowerCase() ===
+            emptyOptionText
+          );
+        });
 
-        toggle?.classList.remove("w--open");
-        list?.classList.remove("w--open");
-
-        toggle?.setAttribute("aria-expanded", "false");
-        list?.setAttribute("aria-hidden", "true");
+        if (emptyOptionLink) {
+          // Let Finsweet perform the reset itself.
+          emptyOptionLink.click();
+        } else {
+          console.warn(
+            "No matching custom placeholder option found:",
+            emptyOption.textContent
+          );
+        }
       });
 
       clearTripError(trip);
@@ -1773,16 +1731,20 @@ updateStepIcons(issueDateParts);
 
         if (!trip) return;
 
-        hide(trip);
-        trip.classList.remove("is-entering", "is-on-top");
-
+        // Reset through Finsweet while the card is still active.
         resetStep5TripValues(trip);
 
-        refreshTripUI();
+        requestAnimationFrame(() => {
+          hide(trip);
 
-        requestAnimationFrame(
-          calculateTemporaryResidencyDates
-        );
+          trip.classList.remove(
+            "is-entering",
+            "is-on-top"
+          );
+
+          refreshTripUI();
+          calculateTemporaryResidencyDates();
+        });
 
         return;
       }
