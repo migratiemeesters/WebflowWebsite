@@ -390,15 +390,7 @@ function initCalculator() {
       : getTripCards();
 
     trips.forEach((trip) => {
-      trip
-        .querySelectorAll(
-          '[fs-selectcustom-element^="dropdown"]'
-        )
-        .forEach((dropdown) => {
-          dropdown.dispatchEvent(
-            new CustomEvent("selectcustom:reset")
-          );
-        });
+      window.selectCustomReadable?.reset(trip);
 
       clearTripError(trip);
 
@@ -414,17 +406,9 @@ function initCalculator() {
   }
 
   function resetTripCardData() {
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
-      trip.querySelectorAll("input, select, textarea").forEach((field) => {
-        if (field.type === "checkbox" || field.type === "radio") {
-          field.checked = false;
-        } else {
-          field.value = "";
-        }
-      });
+    resetStep5TripValues();
 
-      clearTripError(trip);
-      trip.classList.remove("is-entering", "is-on-top");
+    getTripCards().forEach((trip) => {
       hide(trip);
     });
   }
@@ -463,31 +447,16 @@ function initCalculator() {
       const wrap = document.querySelector('[data-departure-notification="wrap"]');
       if (wrap) hide(wrap);
     } else {
-      const wrap = document.querySelector('[data-departure-notification="wrap"]');
-      if (wrap) showBlock(wrap);
-      resetDependentQuestions();
-      resetTripCardData();
+      const wrap = document.querySelector(
+        '[data-departure-notification="wrap"]'
+      );
+
+      if (wrap) {
+        showBlock(wrap);
+      }
     }
-  }
 
-  function hasTripCardInputStarted() {
-    return getTripCards().some((card) => {
-      const returnParts = getTripReturnDateParts(card);
-      const departureParts = getTripDepartureDateParts(card);
 
-      if (returnParts || departureParts) return true;
-
-      const fields = Array.from(card.querySelectorAll("input, select, textarea")).filter((field) => {
-        if (field.type === "hidden" || field.type === "submit" || field.type === "button") return false;
-        return true;
-      });
-
-      return fields.some((field) => {
-        if (field.type === "radio" || field.type === "checkbox") return field.checked;
-        return String(field.value || "").trim() !== "";
-      });
-    });
-  }
 
   function updateBranchVisibility(issueDateParts) {
     const departureChoice = getSelectedDepartureChoice();
@@ -558,18 +527,31 @@ function initCalculator() {
     return getTripCards().filter(isVisible);
   }
 
-  function hasVisibleTripWithReturnDate() {
-    return getVisibleTrips().some((card) => {
-      return !!getTripReturnDateParts(card);
-    });
-  }
-
   function canShowStep4YesResult() {
-    if (!hasVisibleTripWithReturnDate()) return false;
+    const visibleTrips = getVisibleTrips();
+
+    if (!visibleTrips.length) {
+      return false;
+    }
+
+    const everyTripHasReturn =
+      visibleTrips.every((trip) => {
+        return Boolean(
+          getTripReturnDateParts(trip)
+        );
+      });
+
+    if (!everyTripHasReturn) {
+      return false;
+    }
 
     const tripChain = buildTripChain();
 
-    return !tripChain.messages.length;
+    return (
+      tripChain.messages.length === 0 &&
+      tripChain.absences.length ===
+        visibleTrips.length
+    );
   }
 
   function hasStartedTripCard(card) {
