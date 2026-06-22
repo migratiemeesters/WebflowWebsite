@@ -1038,7 +1038,7 @@ function initCalculator() {
         );
         setOutput(
           "return-status-description",
-          `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Je kunt de aanvraag voor je permanente verblijfsvergunning starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
+          `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${returnDeadlineText} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je kunt de aanvraag voor je permanente verblijfsvergunning starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní.`
         );
         setOutput("return-status-cta", "Plan je terugkeer");
         showReturnStatusIcon("return-needed");
