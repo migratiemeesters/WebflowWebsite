@@ -901,7 +901,9 @@ function initCalculator() {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
       setOutput(
         "step3-no-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. 
+        
+        Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("step3-no-status-cta", "Plan je terugkeer");
       showStep3NoStatusIcon("return-needed");
