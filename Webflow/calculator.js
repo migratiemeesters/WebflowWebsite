@@ -1513,66 +1513,201 @@ updateStepIcons(issueDateParts);
   }
 
   function bindTripRecalculation() {
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
-      trip.querySelectorAll(':scope [data-trip-group] [data-tempres-source]').forEach((el) => {
-        const observer = new MutationObserver(calculateTemporaryResidencyDates);
-        observer.observe(el, {
-          childList: true,
-          characterData: true,
-          subtree: true
+    const trips = getTripCards();
+    const addButton = document.querySelector(
+      '[data-trip-add="button"]'
+    );
+
+    const step4YesRadio = document.querySelector(
+      '[data-extra-trips-toggle="yes"]'
+    );
+
+    const step4NoRadio = document.querySelector(
+      '[data-extra-trips-toggle="no"]'
+    );
+
+    const maxTrips = 4;
+
+    trips.forEach((trip) => {
+      trip
+        .querySelectorAll(
+          ':scope [data-trip-group] [data-tempres-source]'
+        )
+        .forEach((el) => {
+          const observer = new MutationObserver(
+            calculateTemporaryResidencyDates
+          );
+
+          observer.observe(el, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        });
+
+      trip
+        .querySelectorAll("input, select, textarea")
+        .forEach((field) => {
+          field.addEventListener(
+            "input",
+            calculateTemporaryResidencyDates
+          );
+
+          field.addEventListener(
+            "change",
+            calculateTemporaryResidencyDates
+          );
+        });
+    });
+
+    function getVisibleTripCards() {
+      return trips.filter(isVisible);
+    }
+
+    function refreshTripUI() {
+      const visibleTrips = getVisibleTripCards();
+
+      visibleTrips.forEach((trip, index) => {
+        const title = trip.querySelector(
+          '[data-trip-label="title"]'
+        );
+
+        if (title) {
+          title.textContent = `Reis ${index + 1}`;
+        }
+      });
+
+      if (addButton) {
+        addButton.style.display =
+          visibleTrips.length >= maxTrips ? "none" : "flex";
+      }
+    }
+
+    function showTripCard(trip) {
+      if (!trip) return;
+
+      if (trip.dataset.resetBeforeShow === "true") {
+        resetStep5TripValues(trip);
+        delete trip.dataset.resetBeforeShow;
+      }
+
+      trips.forEach((card) => {
+        card.classList.remove("is-on-top");
+      });
+
+      trip.hidden = false;
+      trip.style.display = "flex";
+      trip.classList.add("is-entering", "is-on-top");
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          trip.classList.remove("is-entering");
+          calculateTemporaryResidencyDates();
         });
       });
 
-      trip.querySelectorAll("input, select, textarea").forEach((field) => {
-        field.addEventListener("input", calculateTemporaryResidencyDates);
-        field.addEventListener("change", calculateTemporaryResidencyDates);
+      refreshTripUI();
+    }
+
+    function showNextTrip() {
+      const nextHiddenTrip = trips.find(
+        (trip) => !isVisible(trip)
+      );
+
+      showTripCard(nextHiddenTrip);
+    }
+
+    function showFirstTripIfNeeded() {
+      if (getVisibleTripCards().length) return;
+      showTripCard(trips[0]);
+    }
+
+    function hideAllTrips() {
+      trips.forEach((trip) => {
+        hide(trip);
+        trip.classList.remove("is-entering", "is-on-top");
+        clearTripError(trip);
       });
+
+      refreshTripUI();
+    }
+
+    if (addButton) {
+      addButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        showNextTrip();
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      const removeButton = e.target.closest(
+        '[data-trip-remove="button"]'
+      );
+
+      if (removeButton) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const trip = removeButton.closest(
+          '[data-trip-card="item"]'
+        );
+
+        if (!trip) return;
+
+        hide(trip);
+        trip.classList.remove("is-entering", "is-on-top");
+        trip.dataset.resetBeforeShow = "true";
+
+        clearTripError(trip);
+        refreshTripUI();
+
+        requestAnimationFrame(
+          calculateTemporaryResidencyDates
+        );
+
+        return;
+      }
+
+      const activeTrip = e.target.closest(
+        '[data-trip-card="item"]'
+      );
+
+      trips.forEach((trip) => {
+        trip.classList.remove("is-on-top");
+      });
+
+      if (activeTrip && isVisible(activeTrip)) {
+        activeTrip.classList.add("is-on-top");
+      }
     });
 
-    document.addEventListener(
-      "click",
-      function (e) {
-        const removeButton = e.target.closest(
-          '[data-trip-remove="button"]'
-        );
+    if (step4YesRadio) {
+      step4YesRadio.addEventListener("change", function () {
+        if (!step4YesRadio.checked) return;
 
-        const addButton = e.target.closest(
-          '[data-trip-add="button"]'
-        );
+        requestAnimationFrame(() => {
+          requestAnimationFrame(showFirstTripIfNeeded);
+        });
+      });
+    }
 
-        // Same principle as Step 4 = Nee:
-        // remember which hidden card must be reset later.
-        if (removeButton) {
-          tripToResetOnNextAdd = removeButton.closest(
-            '[data-trip-card="item"]'
-          );
-
-          requestAnimationFrame(() => {
-            requestAnimationFrame(
-              calculateTemporaryResidencyDates
-            );
-          });
-
-          return;
+    if (step4NoRadio) {
+      step4NoRadio.addEventListener("change", function () {
+        if (step4NoRadio.checked) {
+          hideAllTrips();
         }
+      });
+    }
 
-        // Reset the card while it is still hidden,
-        // immediately before the add script shows it.
-        if (addButton && tripToResetOnNextAdd) {
-          resetStep5TripValues(tripToResetOnNextAdd);
-          tripToResetOnNextAdd = null;
-        }
+    if (step4YesRadio?.checked) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(showFirstTripIfNeeded);
+      });
+    }
 
-        if (addButton) {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(
-              calculateTemporaryResidencyDates
-            );
-          });
-        }
-      },
-      true
-    );
+    refreshTripUI();
+  }
+
   }
 
   ["day", "month", "year", "departure-day", "departure-month", "departure-year"].forEach(bindRecalculation);
