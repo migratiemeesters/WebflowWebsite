@@ -368,7 +368,7 @@ function initCalculator() {
     clearStep3DateError();
   }
 
-  function resetStep5TripValues() {
+  function resetStep5TripValues(tripToReset = null) {
     const fields = [
       ["return", "day", "Dag"],
       ["return", "month", "Maand"],
@@ -378,7 +378,11 @@ function initCalculator() {
       ["departure", "year", "Jaar"]
     ];
 
-    document.querySelectorAll('[data-trip-card="item"]').forEach((trip) => {
+    const trips = tripToReset
+      ? [tripToReset]
+      : document.querySelectorAll('[data-trip-card="item"]');
+
+    trips.forEach((trip) => {
       fields.forEach(([group, part, placeholder]) => {
         const source = trip.querySelector(
           `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
@@ -399,19 +403,17 @@ function initCalculator() {
           dropdown?.querySelector("select") ||
           source.querySelector("select");
 
-        if (nativeSelect && nativeSelect.options.length) {
+        if (nativeSelect?.options.length) {
           nativeSelect.selectedIndex = 0;
         }
 
-        if (
-          visibleText &&
-          visibleText.textContent.trim() !== placeholder
-        ) {
+        if (visibleText) {
           visibleText.textContent = placeholder;
         }
       });
 
       clearTripError(trip);
+      trip.classList.remove("has-trip-error");
     });
 
     setTripValidationMessage([]);
@@ -1018,6 +1020,8 @@ function initCalculator() {
     return;
   }
 
+// STEP 4 = JA
+
   function updateFinalStatusForStep4Yes(earliestStartParts, idealLatestStartParts, latestStartParts, returnDeadlineParts) {
     const todayParts = getTodayDateParts();
     const chain = buildTripChain();
@@ -1524,16 +1528,35 @@ updateStepIcons(issueDateParts);
       });
     });
 
-    document.addEventListener("click", function (e) {
-      if (
-        e.target.closest('[data-trip-add="button"]') ||
-        e.target.closest('[data-trip-remove="button"]')
-      ) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(calculateTemporaryResidencyDates);
-        });
-      }
-    });
+    document.addEventListener(
+      "click",
+      function (e) {
+        const removeButton = e.target.closest(
+          '[data-trip-remove="button"]'
+        );
+
+        const addButton = e.target.closest(
+          '[data-trip-add="button"]'
+        );
+
+        if (removeButton) {
+          const trip = removeButton.closest(
+            '[data-trip-card="item"]'
+          );
+
+          resetStep5TripValues(trip);
+        }
+
+        if (removeButton || addButton) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(
+              calculateTemporaryResidencyDates
+            );
+          });
+        }
+      },
+      true
+    );
   }
 
   ["day", "month", "year", "departure-day", "departure-month", "departure-year"].forEach(bindRecalculation);
