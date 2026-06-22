@@ -51,6 +51,37 @@ function initCalculator() {
     });
   }
 
+  function setRichOutput(key, parts) {
+    document
+      .querySelectorAll(
+        `[data-tempres-output="${key}"]`
+      )
+      .forEach((element) => {
+        element.replaceChildren();
+
+        parts.forEach((part) => {
+          if (typeof part === "string") {
+            element.appendChild(
+              document.createTextNode(part)
+            );
+
+            return;
+          }
+
+          const span =
+            document.createElement("span");
+
+          span.className =
+            part.className || "result-date";
+
+          span.textContent =
+            part.text || "";
+
+          element.appendChild(span);
+        });
+      });
+  }
+
   function setStepComplete(stepNumber, isComplete) {
     document.querySelectorAll(`[data-step-icon="${stepNumber}"]`).forEach((el) => {
       el.classList.toggle("is-complete", !!isComplete);
@@ -899,11 +930,46 @@ function initCalculator() {
 
     if (todayParts.utcMs >= issueDateParts.utcMs && todayParts.utcMs < earliestStartParts.utcMs) {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
-      setOutput(
+      setRichOutput(
         "step3-no-status-description",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. 
-        
-        Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        [
+          "Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ",
+          {
+            text: formatDateParts(
+              visitDeadlineParts
+            ),
+            className: "result-date"
+          },
+          " terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ",
+          {
+            text: formatDateParts(
+              earliestStartParts
+            ),
+            className: "result-date"
+          },
+          " tot en met ",
+          {
+            text: formatDateParts(
+              idealLatestStartParts
+            ),
+            className: "result-date"
+          },
+          ". Dien je de aanvraag in na ",
+          {
+            text: formatDateParts(
+              idealLatestStartParts
+            ),
+            className: "result-date"
+          },
+          ", dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ",
+          {
+            text: formatDateParts(
+              latestStartParts
+            ),
+            className: "result-date"
+          },
+          "."
+        ]
       );
       setOutput("step3-no-status-cta", "Plan je terugkeer");
       showStep3NoStatusIcon("return-needed");
