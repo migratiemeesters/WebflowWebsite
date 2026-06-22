@@ -346,9 +346,20 @@
       }
     });
 
+
     if (settings.label instanceof Node) {
-      settings.label.textContent =
+    const currentText = String(
+        settings.label.textContent || ""
+    ).trim();
+
+    const nextText = String(
+        selectedOption.text || ""
+    ).trim();
+
+    if (currentText !== nextText) {
+        settings.label.textContent =
         selectedOption.text;
+    }
     }
 
     updateInitialOptionVisibility(
@@ -657,53 +668,60 @@
     }
   }
 
-/**
- * Resets one custom select without dispatching
- * input/change events for every individual field.
- *
- * The calculator performs one recalculation after
- * the complete group of fields has been reset.
- */
-    function resetCustomSelect(settings) {
-    const emptyOption = settings.options.find(
-        (option) => option.value === ""
+function resetCustomSelect(settings) {
+  const emptyOption = settings.options.find(
+    (option) => option.value === ""
+  );
+
+  if (!emptyOption) {
+    console.warn(
+      "Select Custom: no empty option exists.",
+      settings.select
     );
 
-    if (!emptyOption) {
-        console.warn(
-        "Select Custom: no empty option exists.",
-        settings.select
-        );
+    return;
+  }
 
-        return;
-    }
+  const currentLabel = String(
+    settings.label?.textContent || ""
+  ).trim();
 
-    // Reset the real native select silently.
+  const emptyLabel = String(
+    emptyOption.text || ""
+  ).trim();
+
+  const alreadyReset =
+    settings.select.value === "" &&
+    emptyOption.selected === true &&
+    currentLabel === emptyLabel;
+
+  if (!alreadyReset) {
     settings.select.value = "";
 
-    // Update the custom dropdown UI without firing
-    // input and change events for this individual field.
     selectOption(
-        settings,
-        emptyOption,
-        false
+      settings,
+      emptyOption,
+      false
+    );
+  } else {
+    updateInitialOptionVisibility(settings);
+  }
+
+  const isOpen =
+    settings.toggle.getAttribute(
+      "aria-expanded"
+    ) === "true" ||
+    settings.list.classList.contains(
+      CLASSES.open
     );
 
-    const isOpen =
-        settings.toggle.getAttribute(
-        "aria-expanded"
-        ) === "true" ||
-        settings.list.classList.contains(
-        CLASSES.open
-        );
-
-    if (isOpen) {
-        activateToggle(
-        settings.toggle,
-        false
-        );
-    }
-    }
+  if (isOpen) {
+    activateToggle(
+      settings.toggle,
+      false
+    );
+  }
+}
 
   /**
    * Adds listeners for one custom select.
