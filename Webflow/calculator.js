@@ -385,57 +385,82 @@ function initCalculator() {
   }
 
   function resetStep5TripValues(tripToReset = null) {
+    const fields = [
+      ["return", "day", "Dag"],
+      ["return", "month", "Maand"],
+      ["return", "year", "Jaar"],
+      ["departure", "day", "Dag"],
+      ["departure", "month", "Maand"],
+      ["departure", "year", "Jaar"]
+    ];
+
     const trips = tripToReset
       ? [tripToReset]
       : getTripCards();
 
     trips.forEach((trip) => {
-      trip.querySelectorAll(".date-dropdown").forEach((dropdown) => {
-        const select = dropdown.querySelector("select");
-
-        if (!select) return;
-
-        // Find the native empty placeholder option.
-        const emptyOption = Array.from(select.options).find(
-          (option) => option.value === ""
+      fields.forEach(([group, part, placeholder]) => {
+        const source = trip.querySelector(
+          `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
         );
 
-        if (!emptyOption) {
-          console.warn(
-            "No empty initial option found in date select:",
-            select
+        if (!source) return;
+
+        const dropdown =
+          source.closest(".date-dropdown") ||
+          source.querySelector(".date-dropdown");
+
+        if (!dropdown) return;
+
+        const select =
+          dropdown.querySelector("select") ||
+          source.querySelector("select");
+
+        const label =
+          dropdown.querySelector(".date-text") ||
+          source.querySelector(".date-text") ||
+          (source.matches(".date-text") ? source : null);
+
+        // Clear the real native select value.
+        if (select && select.options.length) {
+          Array.from(select.options).forEach((option) => {
+            option.selected = false;
+            option.removeAttribute("selected");
+          });
+
+          select.selectedIndex = 0;
+          select.options[0].selected = true;
+          select.value = select.options[0].value;
+
+          select.dispatchEvent(
+            new Event("input", { bubbles: true })
           );
-          return;
+
+          select.dispatchEvent(
+            new Event("change", { bubbles: true })
+          );
         }
 
-        const emptyOptionText = emptyOption.textContent
-          .trim()
-          .toLowerCase();
+        // Clear the visible custom label.
+        if (label) {
+          label.textContent = placeholder;
+        }
 
-        const optionLinks = Array.from(
-          dropdown.querySelectorAll(
-            ".date-dropdown-list .date-custom-field_link-block"
+        // Remove the stale highlighted custom option.
+        dropdown
+          .querySelectorAll(
+            ".date-custom-field_link-block, .w-dropdown-link"
           )
-        );
+          .forEach((option) => {
+            option.classList.remove(
+              "w--current",
+              "is-current",
+              "is-selected"
+            );
 
-        // Find the generated Finsweet link that represents
-        // the empty native option.
-        const emptyOptionLink = optionLinks.find((link) => {
-          return (
-            link.textContent.trim().toLowerCase() ===
-            emptyOptionText
-          );
-        });
-
-        if (emptyOptionLink) {
-          // Let Finsweet perform the reset itself.
-          emptyOptionLink.click();
-        } else {
-          console.warn(
-            "No matching custom placeholder option found:",
-            emptyOption.textContent
-          );
-        }
+            option.removeAttribute("aria-current");
+            option.setAttribute("aria-selected", "false");
+          });
       });
 
       clearTripError(trip);
@@ -1729,7 +1754,7 @@ updateStepIcons(issueDateParts);
 
         if (!trip) return;
 
-        // Reset through Finsweet while the card is still active.
+        // Reset while the custom fields are still active.
         resetStep5TripValues(trip);
 
         requestAnimationFrame(() => {
@@ -1741,7 +1766,10 @@ updateStepIcons(issueDateParts);
           );
 
           refreshTripUI();
-          calculateTemporaryResidencyDates();
+
+          requestAnimationFrame(
+            calculateTemporaryResidencyDates
+          );
         });
 
         return;
