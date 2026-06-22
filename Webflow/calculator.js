@@ -385,83 +385,20 @@ function initCalculator() {
   }
 
   function resetStep5TripValues(tripToReset = null) {
-    const fields = [
-      ["return", "day", "Dag"],
-      ["return", "month", "Maand"],
-      ["return", "year", "Jaar"],
-      ["departure", "day", "Dag"],
-      ["departure", "month", "Maand"],
-      ["departure", "year", "Jaar"]
-    ];
-
     const trips = tripToReset
       ? [tripToReset]
       : getTripCards();
 
     trips.forEach((trip) => {
-      fields.forEach(([group, part, placeholder]) => {
-        const source = trip.querySelector(
-          `[data-trip-group="${group}"] [data-tempres-source="${part}"]`
-        );
-
-        if (!source) return;
-
-        const dropdown =
-          source.closest(".date-dropdown") ||
-          source.querySelector(".date-dropdown");
-
-        if (!dropdown) return;
-
-        const select =
-          dropdown.querySelector("select") ||
-          source.querySelector("select");
-
-        const label =
-          dropdown.querySelector(".date-text") ||
-          source.querySelector(".date-text") ||
-          (source.matches(".date-text") ? source : null);
-
-        // Clear the real native select value.
-        if (select && select.options.length) {
-          Array.from(select.options).forEach((option) => {
-            option.selected = false;
-            option.removeAttribute("selected");
-          });
-
-          select.selectedIndex = 0;
-          select.options[0].selected = true;
-          select.value = select.options[0].value;
-
-          select.dispatchEvent(
-            new Event("input", { bubbles: true })
+      trip
+        .querySelectorAll(
+          '[fs-selectcustom-element^="dropdown"]'
+        )
+        .forEach((dropdown) => {
+          dropdown.dispatchEvent(
+            new CustomEvent("selectcustom:reset")
           );
-
-          select.dispatchEvent(
-            new Event("change", { bubbles: true })
-          );
-        }
-
-        // Clear the visible custom label.
-        if (label) {
-          label.textContent = placeholder;
-        }
-
-        // Remove the stale highlighted custom option.
-        dropdown
-          .querySelectorAll(
-            ".date-custom-field_link-block, .w-dropdown-link"
-          )
-          .forEach((option) => {
-            option.classList.remove(
-              "w--current",
-              "is-current",
-              "is-selected"
-            );
-
-            option.removeAttribute("aria-current");
-            option.setAttribute("aria-selected", "false");
-          });
-      });
+        });
 
       clearTripError(trip);
 
