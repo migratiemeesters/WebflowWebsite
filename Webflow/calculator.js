@@ -947,7 +947,7 @@ function initCalculator() {
       setRichOutput(
         "step3-no-status-description",
         [
-          "Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Het is belangrijk dat je uiterlijk op ",
+          "Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ",
           {
             text: formatDateParts(
               visitDeadlineParts
