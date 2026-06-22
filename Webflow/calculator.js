@@ -1528,35 +1528,37 @@ updateStepIcons(issueDateParts);
       });
     });
 
-    document.addEventListener(
-      "click",
-      function (e) {
-        const removeButton = e.target.closest(
-          '[data-trip-remove="button"]'
+    document.addEventListener("click", function (e) {
+      const removeButton = e.target.closest(
+        '[data-trip-remove="button"]'
+      );
+
+      const addButton = e.target.closest(
+        '[data-trip-add="button"]'
+      );
+
+      if (removeButton) {
+        const trip = removeButton.closest(
+          '[data-trip-card="item"]'
         );
 
-        const addButton = e.target.closest(
-          '[data-trip-add="button"]'
-        );
-
-        if (removeButton) {
-          const trip = removeButton.closest(
-            '[data-trip-card="item"]'
-          );
-
+        // Wait until the existing remove script has finished.
+        setTimeout(() => {
           resetStep5TripValues(trip);
-        }
+          calculateTemporaryResidencyDates();
+        }, 0);
 
-        if (removeButton || addButton) {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(
-              calculateTemporaryResidencyDates
-            );
-          });
-        }
-      },
-      true
-    );
+        return;
+      }
+
+      if (addButton) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(
+            calculateTemporaryResidencyDates
+          );
+        });
+      }
+    });
   }
 
   ["day", "month", "year", "departure-day", "departure-month", "departure-year"].forEach(bindRecalculation);
