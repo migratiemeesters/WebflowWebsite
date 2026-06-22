@@ -1542,12 +1542,25 @@ updateStepIcons(issueDateParts);
           '[data-trip-card="item"]'
         );
 
-        // Wait until the existing remove script has finished.
-        setTimeout(() => {
-          resetStep5TripValues(trip);
-          calculateTemporaryResidencyDates();
-        }, 0);
+        let attempts = 0;
 
+        function resetWhenHidden() {
+          attempts++;
+
+          // Wait until the existing remove script has hidden the card.
+          if (trip && !isVisible(trip)) {
+            resetStep5TripValues(trip);
+            calculateTemporaryResidencyDates();
+            return;
+          }
+
+          // Try for a few frames while the card is being hidden.
+          if (attempts < 10) {
+            requestAnimationFrame(resetWhenHidden);
+          }
+        }
+
+        requestAnimationFrame(resetWhenHidden);
         return;
       }
 
