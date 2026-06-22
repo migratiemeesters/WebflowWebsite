@@ -429,48 +429,48 @@ function initCalculator() {
     return getSelectedExtraTripsChoice() === "yes";
   }
 
-function updateDepartureQuestionState(issueDateParts) {
-  const yesRadio = document.querySelector(
-    '[data-departure-toggle="yes"]'
-  );
-
-  const noRadio = document.querySelector(
-    '[data-departure-toggle="no"]'
-  );
-
-  const questionWrap = document.querySelector(
-    '[data-departure-question="wrap"]'
-  );
-
-  const notificationWrap = document.querySelector(
-    '[data-departure-notification="wrap"]'
-  );
-
-  const isReady = Boolean(issueDateParts);
-
-  if (yesRadio) {
-    yesRadio.disabled = !isReady;
-  }
-
-  if (noRadio) {
-    noRadio.disabled = !isReady;
-  }
-
-  if (questionWrap) {
-    questionWrap.classList.toggle(
-      "is-disabled",
-      !isReady
+  function updateDepartureQuestionState(issueDateParts) {
+    const yesRadio = document.querySelector(
+      '[data-departure-toggle="yes"]'
     );
-  }
 
-  if (notificationWrap) {
-    if (isReady) {
-      hide(notificationWrap);
-    } else {
-      showBlock(notificationWrap);
+    const noRadio = document.querySelector(
+      '[data-departure-toggle="no"]'
+    );
+
+    const questionWrap = document.querySelector(
+      '[data-departure-question="wrap"]'
+    );
+
+    const notificationWrap = document.querySelector(
+      '[data-departure-notification="wrap"]'
+    );
+
+    const isReady = Boolean(issueDateParts);
+
+    if (yesRadio) {
+      yesRadio.disabled = !isReady;
+    }
+
+    if (noRadio) {
+      noRadio.disabled = !isReady;
+    }
+
+    if (questionWrap) {
+      questionWrap.classList.toggle(
+        "is-disabled",
+        !isReady
+      );
+    }
+
+    if (notificationWrap) {
+      if (isReady) {
+        hide(notificationWrap);
+      } else {
+        showBlock(notificationWrap);
+      }
     }
   }
-}
 
   function updateBranchVisibility(issueDateParts) {
     const departureChoice = getSelectedDepartureChoice();
