@@ -15,7 +15,6 @@ function initCalculator() {
   };
 
   let resetStep5OnNextOpen = false;
-  let tripToResetOnNextAdd = null;
 
   function getSourceElement(key, scope = document) {
     return scope.querySelector(`[data-tempres-source="${key}"]`);
@@ -279,6 +278,24 @@ function initCalculator() {
       getTripSource("month", "departure", card),
       getTripSource("year", "departure", card)
     );
+  }
+
+  function hasTripDateInput(card, group) {
+    const placeholders = {
+      day: ["", "dag", "day"],
+      month: ["", "maand", "month"],
+      year: ["", "jaar", "year"]
+    };
+
+    return ["day", "month", "year"].some((part) => {
+      const value = String(
+        getTripSource(part, group, card) || ""
+      )
+        .trim()
+        .toLowerCase();
+
+      return !placeholders[part].includes(value);
+    });
   }
 
   function getTripErrorElements(card, type = "return") {
@@ -683,33 +700,88 @@ function initCalculator() {
         }
         continue;
       }
-
+      
       const returnParts = getTripReturnDateParts(card);
       const nextDepartureParts = getTripDepartureDateParts(card);
-      const started = hasStartedTripCard(card);
+
+      const returnStarted = hasTripDateInput(card, "return");
+      const departureStarted = hasTripDateInput(card, "departure");
+      const started = returnStarted || departureStarted;
 
       if (!started) {
         chainStopped = true;
         continue;
       }
 
-      if (!returnParts && !nextDepartureParts) {
-        chainStopped = true;
-        continue;
+      let cardHasError = false;
+
+      // Inreisdatum is partially filled or impossible,
+      // such as 31 April.
+      if (returnStarted && !returnParts) {
+        const msg = `Vul een volledige en geldige inreisdatum in.`;
+
+        messages.push(msg);
+        showTripError(card, msg, "return");
+        cardHasError = true;
       }
 
-      if (!returnParts && nextDepartureParts) {
+      // A vertrekdatum was entered without an inreisdatum.
+      if (!returnStarted && departureStarted) {
         const msg = `Vul eerst een geldige inreisdatum in.`;
+
         messages.push(msg);
         showTripError(card, msg, "return");
-        chainStopped = true;
-        continue;
+        cardHasError = true;
       }
 
-      if (returnParts.utcMs < previousDeparture.utcMs) {
-        const msg = `De inreisdatum kan niet vóór je eerste vertrek uit Paraguay liggen.`;
+      // Vertrekdatum is partially filled or impossible.
+      if (departureStarted && !nextDepartureParts) {
+        const msg = `Vul een volledige en geldige vertrekdatum in.`;
+
+        messages.push(msg);
+        showTripError(card, msg, "departure");
+        cardHasError = true;
+      }
+
+      // Inreisdatum cannot be before the previous departure.
+      if (
+        returnParts &&
+        returnParts.utcMs < previousDeparture.utcMs
+      ) {
+        const msg =
+          cardNumber === 1
+            ? `De inreisdatum kan niet vóór je eerste vertrek uit Paraguay liggen.`
+            : `De inreisdatum kan niet vóór je vorige vertrek uit Paraguay liggen.`;
+
         messages.push(msg);
         showTripError(card, msg, "return");
+        cardHasError = true;
+      }
+
+      // Validate a complete vertrekdatum.
+      if (nextDepartureParts) {
+        if (nextDepartureParts.utcMs < previousDeparture.utcMs) {
+          const msg =
+            cardNumber === 1
+              ? `De vertrekdatum kan niet vóór je eerste vertrek uit Paraguay liggen.`
+              : `De vertrekdatum kan niet vóór je vorige vertrek uit Paraguay liggen.`;
+
+          messages.push(msg);
+          showTripError(card, msg, "departure");
+          cardHasError = true;
+        } else if (
+          returnParts &&
+          nextDepartureParts.utcMs < returnParts.utcMs
+        ) {
+          const msg = `De vertrekdatum kan niet vóór de inreisdatum liggen.`;
+
+          messages.push(msg);
+          showTripError(card, msg, "departure");
+          cardHasError = true;
+        }
+      }
+
+      if (cardHasError) {
         chainStopped = true;
         continue;
       }
@@ -718,18 +790,13 @@ function initCalculator() {
         index: cardNumber,
         from: previousDeparture,
         to: returnParts,
-        daysOutside: daysBetweenParts(previousDeparture, returnParts)
+        daysOutside: daysBetweenParts(
+          previousDeparture,
+          returnParts
+        )
       });
 
       if (!nextDepartureParts) {
-        chainStopped = true;
-        continue;
-      }
-
-      if (nextDepartureParts.utcMs < returnParts.utcMs) {
-        const msg = `De vertrekdatum kan niet vóór de inreisdatum liggen.`;
-        messages.push(msg);
-        showTripError(card, msg, "departure");
         chainStopped = true;
         continue;
       }
@@ -1586,11 +1653,6 @@ updateStepIcons(issueDateParts);
     function showTripCard(trip) {
       if (!trip) return;
 
-      if (trip.dataset.resetBeforeShow === "true") {
-        resetStep5TripValues(trip);
-        delete trip.dataset.resetBeforeShow;
-      }
-
       trips.forEach((card) => {
         card.classList.remove("is-on-top");
       });
@@ -1654,11 +1716,12 @@ updateStepIcons(issueDateParts);
 
         if (!trip) return;
 
+        // Hide first, then reset while hidden.
         hide(trip);
         trip.classList.remove("is-entering", "is-on-top");
-        trip.dataset.resetBeforeShow = "true";
 
-        clearTripError(trip);
+        resetStep5TripValues(trip);
+
         refreshTripUI();
 
         requestAnimationFrame(
@@ -1706,8 +1769,6 @@ updateStepIcons(issueDateParts);
     }
 
     refreshTripUI();
-  }
-
   }
 
   ["day", "month", "year", "departure-day", "departure-month", "departure-year"].forEach(bindRecalculation);
