@@ -386,6 +386,7 @@ function initCalculator() {
     clearStep3DateError();
   }
 
+
   function resetStep5TripValues(tripToReset = null) {
     const fields = [
       ["return", "day", "Dag"],
@@ -408,30 +409,86 @@ function initCalculator() {
 
         if (!source) return;
 
-        const dropdown =
+        const dateDropdown =
           source.closest(".date-dropdown") ||
           source.querySelector(".date-dropdown");
 
+        const dropdown =
+          dateDropdown?.matches(".w-dropdown")
+            ? dateDropdown
+            : dateDropdown?.closest(".w-dropdown") ||
+              dateDropdown;
+
         const visibleText = source.matches(".date-text")
           ? source
-          : dropdown?.querySelector(".date-text") ||
+          : dateDropdown?.querySelector(".date-text") ||
             source.querySelector(".date-text");
 
         const nativeSelect =
-          dropdown?.querySelector("select") ||
+          dateDropdown?.querySelector("select") ||
           source.querySelector("select");
 
+        // Reset the real native select.
         if (nativeSelect?.options.length) {
+          Array.from(nativeSelect.options).forEach(
+            (option, index) => {
+              option.selected = index === 0;
+
+              if (index === 0) {
+                option.setAttribute("selected", "");
+              } else {
+                option.removeAttribute("selected");
+              }
+            }
+          );
+
           nativeSelect.selectedIndex = 0;
+          nativeSelect.value =
+            nativeSelect.options[0]?.value || "";
         }
 
+        // Reset the visible label.
         if (visibleText) {
           visibleText.textContent = placeholder;
         }
+
+        // Remove the ghost selected state.
+        dropdown
+          ?.querySelectorAll(
+            ".w-dropdown-link, .date-custom-field_link-block"
+          )
+          .forEach((optionLink) => {
+            optionLink.classList.remove("w--current");
+            optionLink.classList.remove("is-selected");
+            optionLink.removeAttribute("aria-current");
+            optionLink.setAttribute("aria-selected", "false");
+          });
+
+        // Close the dropdown if it was open when X was clicked.
+        dropdown?.classList.remove("w--open");
+
+        const toggle = dropdown?.querySelector(
+          ".w-dropdown-toggle, .date-dropdown-toggle"
+        );
+
+        const list = dropdown?.querySelector(
+          ".w-dropdown-list, .date-dropdown-list"
+        );
+
+        toggle?.classList.remove("w--open");
+        list?.classList.remove("w--open");
+
+        toggle?.setAttribute("aria-expanded", "false");
+        list?.setAttribute("aria-hidden", "true");
       });
 
       clearTripError(trip);
-      trip.classList.remove("has-trip-error");
+
+      trip.classList.remove(
+        "has-trip-error",
+        "is-entering",
+        "is-on-top"
+      );
     });
 
     setTripValidationMessage([]);
@@ -1716,7 +1773,6 @@ updateStepIcons(issueDateParts);
 
         if (!trip) return;
 
-        // Hide first, then reset while hidden.
         hide(trip);
         trip.classList.remove("is-entering", "is-on-top");
 
