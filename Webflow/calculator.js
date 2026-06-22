@@ -15,6 +15,7 @@ function initCalculator() {
   };
 
   let resetStep5OnNextOpen = false;
+  let tripToResetOnNextAdd = null;
 
   function getSourceElement(key, scope = document) {
     return scope.querySelector(`[data-tempres-source="${key}"]`);
@@ -1528,50 +1529,50 @@ updateStepIcons(issueDateParts);
       });
     });
 
-    document.addEventListener("click", function (e) {
-      const removeButton = e.target.closest(
-        '[data-trip-remove="button"]'
-      );
-
-      const addButton = e.target.closest(
-        '[data-trip-add="button"]'
-      );
-
-      if (removeButton) {
-        const trip = removeButton.closest(
-          '[data-trip-card="item"]'
+    document.addEventListener(
+      "click",
+      function (e) {
+        const removeButton = e.target.closest(
+          '[data-trip-remove="button"]'
         );
 
-        let attempts = 0;
+        const addButton = e.target.closest(
+          '[data-trip-add="button"]'
+        );
 
-        function resetWhenHidden() {
-          attempts++;
+        // Same principle as Step 4 = Nee:
+        // remember which hidden card must be reset later.
+        if (removeButton) {
+          tripToResetOnNextAdd = removeButton.closest(
+            '[data-trip-card="item"]'
+          );
 
-          // Wait until the existing remove script has hidden the card.
-          if (trip && !isVisible(trip)) {
-            resetStep5TripValues(trip);
-            calculateTemporaryResidencyDates();
-            return;
-          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(
+              calculateTemporaryResidencyDates
+            );
+          });
 
-          // Try for a few frames while the card is being hidden.
-          if (attempts < 10) {
-            requestAnimationFrame(resetWhenHidden);
-          }
+          return;
         }
 
-        requestAnimationFrame(resetWhenHidden);
-        return;
-      }
+        // Reset the card while it is still hidden,
+        // immediately before the add script shows it.
+        if (addButton && tripToResetOnNextAdd) {
+          resetStep5TripValues(tripToResetOnNextAdd);
+          tripToResetOnNextAdd = null;
+        }
 
-      if (addButton) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(
-            calculateTemporaryResidencyDates
-          );
-        });
-      }
-    });
+        if (addButton) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(
+              calculateTemporaryResidencyDates
+            );
+          });
+        }
+      },
+      true
+    );
   }
 
   ["day", "month", "year", "departure-day", "departure-month", "departure-year"].forEach(bindRecalculation);
