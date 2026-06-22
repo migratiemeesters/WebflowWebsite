@@ -876,6 +876,7 @@ function initCalculator() {
   function resetStep3NoStatusOutputs() {
     setOutput("step3-no-status-title", "");
     setOutput("step3-no-status-description", "");
+    setOutput("step3-no-status-cta", "");
     hideAllStep3NoStatusIcons();
   }
 
@@ -902,6 +903,7 @@ function initCalculator() {
         "step3-no-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${formatDateParts(visitDeadlineParts)} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
+      setOutput("step3-no-status-cta", "Plan je terugkeer");
       showStep3NoStatusIcon("return-needed");
       return;
     }
@@ -915,6 +917,7 @@ function initCalculator() {
         "step3-no-status-description",
         `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
+      setOutput("step3-no-status-cta", "Aanvraag starten");
       showStep3NoStatusIcon("can-start");
       return;
     }
@@ -928,6 +931,7 @@ function initCalculator() {
         "step3-no-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
+      setOutput("step3-no-status-cta", "Aanvraag starten");
       showStep3NoStatusIcon("can-start");
       return;
     }
@@ -946,6 +950,7 @@ function initCalculator() {
 
       Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
+    setOutput("step3-no-status-cta", "Bespreek je situatie");
     showStep3NoStatusIcon("too-late");
   }
 
@@ -992,6 +997,7 @@ function initCalculator() {
             "return-deadline-text",
             `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Je aanvraagperiode voor de permanente verblijfsvergunning is al gestart. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten.`
           );
+          setOutput("return-status-cta", "Aanvraag starten");
           setOutput(
             "return-status-description",
             `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt zonder boete de aanvraag voor je permanente verblijfsvergunning starten tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten. Je uiterste terugkeerdatum is ${returnDeadlineText}.`
