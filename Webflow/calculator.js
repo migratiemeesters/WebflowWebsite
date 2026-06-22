@@ -57,9 +57,11 @@ function initCalculator() {
         `[data-tempres-output="${key}"]`
       )
       .forEach((element) => {
+        // Remove the previous content.
         element.replaceChildren();
 
         parts.forEach((part) => {
+          // Normal text.
           if (typeof part === "string") {
             element.appendChild(
               document.createTextNode(part)
@@ -68,16 +70,28 @@ function initCalculator() {
             return;
           }
 
-          const span =
-            document.createElement("span");
+          // Line break.
+          if (part?.type === "break") {
+            element.appendChild(
+              document.createElement("br")
+            );
 
-          span.className =
-            part.className || "result-date";
+            return;
+          }
 
-          span.textContent =
-            part.text || "";
+          // Styled dynamic text, such as a date.
+          if (part?.text !== undefined) {
+            const span =
+              document.createElement("span");
 
-          element.appendChild(span);
+            span.className =
+              part.className || "result-date";
+
+            span.textContent =
+              String(part.text);
+
+            element.appendChild(span);
+          }
         });
       });
   }
@@ -940,7 +954,12 @@ function initCalculator() {
             ),
             className: "result-date"
           },
-          " terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ",
+          " terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning.",
+
+          { type: "break" },
+          { type: "break" },
+
+          "Je ideale aanvraagperiode loopt van ",
           {
             text: formatDateParts(
               earliestStartParts
