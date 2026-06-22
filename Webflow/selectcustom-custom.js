@@ -31,7 +31,7 @@
   };
 
   /**
-   * Dispatches one or more bubbling DOM events.
+   * Dispatches bubbling DOM events.
    */
   function dispatchEvents(element, eventNames) {
     eventNames.forEach((eventName) => {
@@ -44,7 +44,7 @@
   }
 
   /**
-   * Finds the first non-empty text node inside an element.
+   * Finds the first non-empty text node.
    */
   function findFirstTextNode(element) {
     for (const node of element.childNodes) {
@@ -70,10 +70,11 @@
   }
 
   /**
-   * Changes the text inside a cloned option template.
+   * Replaces the visible text inside an element.
    */
   function setElementText(element, text) {
-    const textNode = findFirstTextNode(element);
+    const textNode =
+      findFirstTextNode(element);
 
     if (textNode) {
       textNode.textContent = text;
@@ -84,7 +85,7 @@
   }
 
   /**
-   * Simulates Webflow's dropdown-toggle interaction.
+   * Simulates a Webflow dropdown toggle click.
    */
   function activateToggle(
     toggle,
@@ -110,16 +111,17 @@
   }
 
   /**
-   * Finds all DOM elements needed for one custom select.
+   * Finds all elements required for one custom select.
    */
   function collectSettings(referenceElement) {
-    const dropdown = referenceElement.closest(
-      SELECTORS.webflowDropdown
-    );
+    const dropdown =
+      referenceElement.closest(
+        SELECTORS.webflowDropdown
+      );
 
     if (!dropdown) {
       console.warn(
-        "Select Custom: the reference element is not inside a Webflow dropdown.",
+        "Select Custom: reference element is not inside a Webflow dropdown.",
         referenceElement
       );
 
@@ -129,17 +131,19 @@
     const select =
       dropdown.querySelector("select");
 
-    const toggle = dropdown.querySelector(
-      SELECTORS.webflowToggle
-    );
+    const toggle =
+      dropdown.querySelector(
+        SELECTORS.webflowToggle
+      );
 
-    const list = dropdown.querySelector(
-      SELECTORS.webflowList
-    );
+    const list =
+      dropdown.querySelector(
+        SELECTORS.webflowList
+      );
 
     if (!select || !toggle || !list) {
       console.warn(
-        "Select Custom: dropdown is missing a select, toggle, or dropdown list.",
+        "Select Custom: dropdown is missing a select, toggle, or list.",
         dropdown
       );
 
@@ -157,9 +161,10 @@
       SELECTORS.resetFallback,
     ].join(", ");
 
-    const optionTemplate = list.querySelector(
-      `a:not(${excludedTemplates})`
-    );
+    const optionTemplate =
+      list.querySelector(
+        `a:not(${excludedTemplates})`
+      );
 
     if (
       !(
@@ -168,7 +173,7 @@
       )
     ) {
       console.warn(
-        "Select Custom: no anchor option template was found.",
+        "Select Custom: no option template was found.",
         dropdown
       );
 
@@ -182,9 +187,8 @@
       return null;
     }
 
-    const resetTemplate = list.querySelector(
-      excludedTemplates
-    );
+    const resetTemplate =
+      list.querySelector(excludedTemplates);
 
     const hideInitial =
       referenceElement.getAttribute(
@@ -192,15 +196,16 @@
       ) === "true";
 
     /*
-     * Save clean clones before removing the
-     * original Webflow template elements.
+     * Save clean copies before removing
+     * the Webflow template elements.
      */
     const optionTemplateClone =
       optionTemplate.cloneNode(true);
 
-    const resetTemplateClone = resetTemplate
-      ? resetTemplate.cloneNode(true)
-      : null;
+    const resetTemplateClone =
+      resetTemplate
+        ? resetTemplate.cloneNode(true)
+        : null;
 
     optionTemplate.remove();
     resetTemplate?.remove();
@@ -213,8 +218,10 @@
       list,
       label,
       optionsContainer,
-      optionTemplate: optionTemplateClone,
-      resetTemplate: resetTemplateClone,
+      optionTemplate:
+        optionTemplateClone,
+      resetTemplate:
+        resetTemplateClone,
       options: [],
       hideInitial,
       isSyncing: false,
@@ -222,7 +229,66 @@
   }
 
   /**
-   * Selects a custom option and updates the native select.
+   * Shows Reset only when a real value is selected.
+   *
+   * Empty field:
+   * - Reset is hidden
+   *
+   * Filled field:
+   * - Reset is visible
+   */
+  function updateInitialOptionVisibility(
+    settings
+  ) {
+    /*
+     * Only control the empty option when:
+     * - a Reset template exists, or
+     * - hideinitial is enabled.
+     */
+    if (
+      !settings.resetTemplate &&
+      !settings.hideInitial
+    ) {
+      return;
+    }
+
+    const emptyOption =
+      settings.options.find(
+        (option) => option.value === ""
+      );
+
+    if (!emptyOption) {
+      return;
+    }
+
+    const hasSelectedValue =
+      settings.select.value !== "";
+
+    /*
+     * Show Reset after selecting a value.
+     * Hide Reset when the field is empty.
+     */
+    emptyOption.hidden =
+      !hasSelectedValue;
+
+    emptyOption.element.style.display =
+      hasSelectedValue ? "" : "none";
+
+    emptyOption.element.setAttribute(
+      "aria-hidden",
+      String(!hasSelectedValue)
+    );
+
+    if (!hasSelectedValue) {
+      emptyOption.element.setAttribute(
+        "tabindex",
+        "-1"
+      );
+    }
+  }
+
+  /**
+   * Selects a custom option.
    */
   function selectOption(
     settings,
@@ -239,10 +305,10 @@
       settings.select.value =
         selectedOption.value;
 
-      dispatchEvents(settings.select, [
-        "input",
-        "change",
-      ]);
+      dispatchEvents(
+        settings.select,
+        ["input", "change"]
+      );
 
       settings.isSyncing = false;
     }
@@ -285,45 +351,13 @@
         selectedOption.text;
     }
 
-    updateInitialOptionVisibility(settings);
-  }
-
-  /**
-   * Hides or shows the empty initial option.
-   */
-  function updateInitialOptionVisibility(
-    settings
-  ) {
-    if (!settings.hideInitial) {
-      return;
-    }
-
-    const selectedOption =
-      settings.options.find(
-        (option) => option.selected
-      );
-
-    const emptyOption =
-      settings.options.find(
-        (option) => option.value === ""
-      );
-
-    if (!emptyOption) {
-      return;
-    }
-
-    const shouldHide = Boolean(
-      selectedOption?.value
+    updateInitialOptionVisibility(
+      settings
     );
-
-    emptyOption.hidden = shouldHide;
-
-    emptyOption.element.style.display =
-      shouldHide ? "none" : "";
   }
 
   /**
-   * Rebuilds the custom options from the native select.
+   * Rebuilds custom options from the native select.
    */
   function populateOptions(settings) {
     settings.options.forEach((option) => {
@@ -341,11 +375,13 @@
         nativeOption.value === "" &&
         settings.resetTemplate;
 
-      const customElement = (
+      const template =
         useResetTemplate
           ? settings.resetTemplate
-          : settings.optionTemplate
-      ).cloneNode(true);
+          : settings.optionTemplate;
+
+      const customElement =
+        template.cloneNode(true);
 
       if (!useResetTemplate) {
         setElementText(
@@ -395,14 +431,16 @@
     });
 
     /*
-     * Fall back to the empty option or first option
-     * when the native select has no matching value.
+     * Fall back to the empty option
+     * or the first available option.
      */
     if (!selectedOption) {
       selectedOption =
         settings.options.find(
-          (option) => option.value === ""
-        ) || settings.options[0];
+          (option) =>
+            option.value === ""
+        ) ||
+        settings.options[0];
     }
 
     selectOption(
@@ -413,13 +451,15 @@
   }
 
   /**
-   * Returns the custom option related to an event target.
+   * Finds the custom option related to an event.
    */
   function getOptionFromEvent(
     event,
     settings
   ) {
-    if (!(event.target instanceof Element)) {
+    if (
+      !(event.target instanceof Element)
+    ) {
       return null;
     }
 
@@ -439,16 +479,17 @@
   }
 
   /**
-   * Handles clicks inside the custom option list.
+   * Handles option clicks.
    */
   function handleListClick(
     event,
     settings
   ) {
-    const option = getOptionFromEvent(
-      event,
-      settings
-    );
+    const option =
+      getOptionFromEvent(
+        event,
+        settings
+      );
 
     if (!option) {
       return;
@@ -468,17 +509,18 @@
   }
 
   /**
-   * Tracks which custom option currently has focus.
+   * Tracks the currently focused option.
    */
   function handleFocusChange(
     event,
     focused,
     settings
   ) {
-    const option = getOptionFromEvent(
-      event,
-      settings
-    );
+    const option =
+      getOptionFromEvent(
+        event,
+        settings
+      );
 
     if (option) {
       option.focused = focused;
@@ -486,7 +528,7 @@
   }
 
   /**
-   * Moves focus to the previous or next option.
+   * Moves keyboard focus through options.
    */
   function moveOptionFocus(
     key,
@@ -502,14 +544,17 @@
     }
 
     const direction =
-      key === KEYS.arrowUp ? -1 : 1;
+      key === KEYS.arrowUp
+        ? -1
+        : 1;
 
     let nextIndex =
       currentIndex + direction;
 
     while (
       nextIndex >= 0 &&
-      nextIndex < settings.options.length
+      nextIndex <
+        settings.options.length
     ) {
       const nextOption =
         settings.options[nextIndex];
@@ -524,7 +569,7 @@
   }
 
   /**
-   * Handles keyboard controls inside the list.
+   * Handles keyboard input inside the option list.
    */
   function handleListKeydown(
     event,
@@ -562,29 +607,32 @@
   }
 
   /**
-   * Focuses the first visible option when ArrowDown is used.
+   * Focuses the first visible option
+   * when ArrowDown is pressed.
    */
   function handleToggleKeydown(
     event,
     settings
   ) {
     if (
-      event.key !== KEYS.arrowDown
+      event.key !==
+      KEYS.arrowDown
     ) {
       return;
     }
 
     const firstVisibleOption =
       settings.options.find(
-        (option) => !option.hidden
+        (option) =>
+          !option.hidden
       );
 
     firstVisibleOption?.element.focus();
   }
 
   /**
-   * Synchronizes the custom interface when another
-   * script changes the native select.
+   * Synchronizes the custom UI when
+   * another script changes the native select.
    */
   function handleNativeSelectChange(
     settings
@@ -610,23 +658,18 @@
   }
 
   /**
-   * Resets one custom select to its empty option.
-   *
-   * Usage:
-   *
-   * dropdown.dispatchEvent(
-   *   new CustomEvent("selectcustom:reset")
-   * );
+   * Resets one custom select.
    */
   function resetCustomSelect(settings) {
     const emptyOption =
       settings.options.find(
-        (option) => option.value === ""
+        (option) =>
+          option.value === ""
       );
 
     if (!emptyOption) {
       console.warn(
-        "Select Custom: no empty native option exists.",
+        "Select Custom: no empty option exists.",
         settings.select
       );
 
@@ -656,53 +699,64 @@
   }
 
   /**
-   * Attaches all event listeners for one custom select.
+   * Adds listeners for one custom select.
    */
   function listenEvents(settings) {
-    const onToggleKeydown = (event) => {
-      handleToggleKeydown(
-        event,
-        settings
-      );
-    };
+    const onToggleKeydown =
+      (event) => {
+        handleToggleKeydown(
+          event,
+          settings
+        );
+      };
 
-    const onListClick = (event) => {
-      handleListClick(
-        event,
-        settings
-      );
-    };
+    const onListClick =
+      (event) => {
+        handleListClick(
+          event,
+          settings
+        );
+      };
 
-    const onListKeydown = (event) => {
-      handleListKeydown(
-        event,
-        settings
-      );
-    };
+    const onListKeydown =
+      (event) => {
+        handleListKeydown(
+          event,
+          settings
+        );
+      };
 
-    const onFocusIn = (event) => {
-      handleFocusChange(
-        event,
-        true,
-        settings
-      );
-    };
+    const onFocusIn =
+      (event) => {
+        handleFocusChange(
+          event,
+          true,
+          settings
+        );
+      };
 
-    const onFocusOut = (event) => {
-      handleFocusChange(
-        event,
-        false,
-        settings
-      );
-    };
+    const onFocusOut =
+      (event) => {
+        handleFocusChange(
+          event,
+          false,
+          settings
+        );
+      };
 
-    const onNativeChange = () => {
-      handleNativeSelectChange(settings);
-    };
+    const onNativeChange =
+      () => {
+        handleNativeSelectChange(
+          settings
+        );
+      };
 
-    const onReset = () => {
-      resetCustomSelect(settings);
-    };
+    const onReset =
+      () => {
+        resetCustomSelect(
+          settings
+        );
+      };
 
     settings.toggle.addEventListener(
       "keydown",
@@ -734,11 +788,12 @@
       onNativeChange
     );
 
-    settings.referenceElement.addEventListener(
-      "selectcustom:reset",
-      onReset
-    );
-
+    /*
+     * Listen only on the Webflow dropdown.
+     *
+     * Reset events fired from the reference
+     * element bubble up to this dropdown.
+     */
     settings.dropdown.addEventListener(
       "selectcustom:reset",
       onReset
@@ -775,11 +830,6 @@
         onNativeChange
       );
 
-      settings.referenceElement.removeEventListener(
-        "selectcustom:reset",
-        onReset
-      );
-
       settings.dropdown.removeEventListener(
         "selectcustom:reset",
         onReset
@@ -788,31 +838,38 @@
   }
 
   /**
-   * Rebuilds options when native <option> elements change.
+   * Rebuilds options when native option elements change.
    */
   function observeNativeOptions(settings) {
     const observer =
-      new MutationObserver((mutations) => {
-        const optionsChanged =
-          mutations.some((mutation) => {
-            return [
-              ...mutation.addedNodes,
-              ...mutation.removedNodes,
-            ].some(
-              (node) =>
-                node instanceof
-                HTMLOptionElement
+      new MutationObserver(
+        (mutations) => {
+          const optionsChanged =
+            mutations.some(
+              (mutation) => {
+                return [
+                  ...mutation.addedNodes,
+                  ...mutation.removedNodes,
+                ].some(
+                  (node) =>
+                    node instanceof
+                    HTMLOptionElement
+                );
+              }
             );
-          });
 
-        if (optionsChanged) {
-          populateOptions(settings);
+          if (optionsChanged) {
+            populateOptions(settings);
+          }
         }
-      });
+      );
 
-    observer.observe(settings.select, {
-      childList: true,
-    });
+    observer.observe(
+      settings.select,
+      {
+        childList: true,
+      }
+    );
 
     return function stopObserving() {
       observer.disconnect();
@@ -820,7 +877,8 @@
   }
 
   /**
-   * Keeps option focus aligned when Webflow opens the list.
+   * Keeps option focus aligned
+   * when Webflow opens the dropdown.
    */
   function observeDropdownState(settings) {
     let timeoutId = null;
@@ -829,8 +887,8 @@
       new MutationObserver(() => {
         clearTimeout(timeoutId);
 
-        timeoutId = window.setTimeout(
-          () => {
+        timeoutId =
+          window.setTimeout(() => {
             const isOpen =
               settings.toggle.getAttribute(
                 "aria-expanded"
@@ -846,12 +904,14 @@
 
             const selectedOption =
               settings.options.find(
-                (option) => option.selected
+                (option) =>
+                  option.selected
               );
 
             const firstVisibleOption =
               settings.options.find(
-                (option) => !option.hidden
+                (option) =>
+                  !option.hidden
               );
 
             const optionToFocus =
@@ -860,18 +920,19 @@
                 : selectedOption;
 
             optionToFocus?.element.focus();
-          },
-          20
-        );
+          }, 20);
       });
 
-    observer.observe(settings.list, {
-      attributes: true,
-      attributeFilter: [
-        "class",
-        "style",
-      ],
-    });
+    observer.observe(
+      settings.list,
+      {
+        attributes: true,
+        attributeFilter: [
+          "class",
+          "style",
+        ],
+      }
+    );
 
     return function stopObserving() {
       clearTimeout(timeoutId);
@@ -894,7 +955,9 @@
     }
 
     const settings =
-      collectSettings(referenceElement);
+      collectSettings(
+        referenceElement
+      );
 
     if (!settings) {
       return null;
@@ -943,7 +1006,7 @@
   }
 
   /**
-   * Initializes all custom selects on the page.
+   * Initializes every custom select.
    */
   function initSelectCustom() {
     const referenceElements =
@@ -959,18 +1022,22 @@
         .filter(Boolean);
 
     /*
-     * Optional public API.
+     * Public reset API.
      *
-     * Reset all selects:
+     * Reset all custom selects:
+     *
      * window.selectCustomReadable.reset();
      *
-     * Reset selects inside one card:
-     * window.selectCustomReadable.reset(tripCard);
+     * Reset custom selects inside a trip:
+     *
+     * window.selectCustomReadable.reset(trip);
      */
     window.selectCustomReadable = {
       destroy() {
         cleanupFunctions.forEach(
-          (cleanup) => cleanup()
+          (cleanup) => {
+            cleanup();
+          }
         );
       },
 
@@ -983,7 +1050,10 @@
             (referenceElement) => {
               referenceElement.dispatchEvent(
                 new CustomEvent(
-                  "selectcustom:reset"
+                  "selectcustom:reset",
+                  {
+                    bubbles: true,
+                  }
                 )
               );
             }
@@ -993,7 +1063,7 @@
   }
 
   /*
-   * Match Webflow's normal initialization timing.
+   * Match Webflow initialization timing.
    */
   window.Webflow =
     window.Webflow || [];
