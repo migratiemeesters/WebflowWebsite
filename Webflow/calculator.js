@@ -96,6 +96,24 @@ function initCalculator() {
       });
   }
 
+  function setStep3NoStatusCardColor(color) {
+    document
+      .querySelectorAll(
+        '[data-tempres-element="step3-no-status-card"]'
+      )
+      .forEach((element) => {
+        element.classList.remove(
+          "green",
+          "yellow",
+          "red"
+        );
+
+        if (color) {
+          element.classList.add(color);
+        }
+      });
+  }
+
   function setStepComplete(stepNumber, isComplete) {
     document.querySelectorAll(`[data-step-icon="${stepNumber}"]`).forEach((el) => {
       el.classList.toggle("is-complete", !!isComplete);
@@ -941,9 +959,10 @@ function initCalculator() {
       resetStep3NoStatusOutputs();
       return;
     }
-
+// Terug keer naar Paraguay Nodig - YELLOW
     if (todayParts.utcMs >= issueDateParts.utcMs && todayParts.utcMs < earliestStartParts.utcMs) {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
+      setStep3NoStatusCardColor("yellow");
       setRichOutput(
         "step3-no-status-description-1",
         [
@@ -1007,12 +1026,13 @@ function initCalculator() {
       showStep3NoStatusIcon("return-needed");
       return;
     }
-
+// Je kunt nu aanvragen (zonder boete) - GREEN
     if (
       todayParts.utcMs >= earliestStartParts.utcMs &&
       todayParts.utcMs <= idealLatestStartParts.utcMs
     ) {
-      setOutput("step3-no-status-title", "Je kunt nu aanvragen");
+      setOutput("step3-no-status-title", "Je kunt nu aanvragen")
+      setStep3NoStatusCardColor("green");
       setOutput(
         "step3-no-status-description",
         `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
@@ -1021,12 +1041,13 @@ function initCalculator() {
       showStep3NoStatusIcon("can-start");
       return;
     }
-
+// Je kunt nu aanvragen (met boete) - GREEN
     if (
       todayParts.utcMs > idealLatestStartParts.utcMs &&
       todayParts.utcMs <= latestStartParts.utcMs
     ) {
       setOutput("step3-no-status-title", "Je kunt nu aanvragen met een boete");
+      setStep3NoStatusCardColor("green");
       setOutput(
         "step3-no-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
@@ -1042,8 +1063,9 @@ function initCalculator() {
       year: "numeric",
       timeZone: "UTC"
     });
-
+// Aanvraagperiode verstreken - RED
     setOutput("step3-no-status-title", "Aanvraagperiode verstreken");
+    setStep3NoStatusCardColor("red");
     setOutput(
       "step3-no-status-description",
       `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}. 
