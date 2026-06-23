@@ -965,7 +965,7 @@ function initCalculator() {
             text: formatDateParts(
               earliestStartParts
             ),
-            className: "result-date"
+            className: "result-date-bold"
           },
           " tot en met ",
           {
@@ -985,7 +985,7 @@ function initCalculator() {
             text: formatDateParts(
               idealLatestStartParts
             ),
-            className: "result-date"
+            className: "result-date-bold"
           },
           ", dan geldt een boete van 669.012 guaraní."
         ]
@@ -998,7 +998,7 @@ function initCalculator() {
             text: formatDateParts(
               latestStartParts
             ),
-            className: "result-date"
+            className: "result-date-bold"
           },
           "."
         ]
