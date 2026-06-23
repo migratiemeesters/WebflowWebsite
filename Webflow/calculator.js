@@ -972,7 +972,7 @@ function initCalculator() {
             text: formatDateParts(
               idealLatestStartParts
             ),
-            className: "result-date"
+            className: "result-date-bold"
           },
           "."
         ]
