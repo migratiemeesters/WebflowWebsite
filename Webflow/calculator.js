@@ -1145,56 +1145,44 @@ function initCalculator() {
     });
 // Aanvraagperiode verstreken - RED
     setOutput("step3-no-status-title", "Aanvraagperiode verstreken");
-    setOutput(
-      "step3-no-status-description",
-      `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}. 
-
-      Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+    setRichOutput(
+      "step3-no-status-description-1",
+      [
+        "De aanvraagperiode voor je permanente verblijfsvergunning is verstreken."
+      ]
     );
-
-
-setRichOutput(
-  "step3-no-status-description-1",
-  [
-    "De aanvraagperiode voor je permanente verblijfsvergunning is verstreken."
-  ]
-);
-
-setRichOutput(
-  "step3-no-status-description-2",
-  [
-    "De uiterste datum om te starten was ",
-    {
-      text: formatDateParts(
-        latestStartParts
-      ),
-      className:
-        "result-date result-date-bold"
-    },
-    "."
-  ]
-);
-
-setRichOutput(
-  "step3-no-status-description-3",
-  [
-    "Vandaag is het ",
-    {
-      text: currentDateText,
-      className:
-        "result-date result-date-bold"
-    },
-    "."
-  ]
-);
-
-setRichOutput(
-  "step3-no-status-description-4",
-  [
-    "Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
-  ]
-);
-
+    setRichOutput(
+      "step3-no-status-description-2",
+      [
+        "De uiterste datum om te starten was ",
+        {
+          text: formatDateParts(
+            latestStartParts
+          ),
+          className:
+            "result-date result-date-bold"
+        },
+        "."
+      ]
+    );
+    setRichOutput(
+      "step3-no-status-description-3",
+      [
+        "Vandaag is het ",
+        {
+          text: currentDateText,
+          className:
+            "result-date result-date-bold"
+        },
+        "."
+      ]
+    );
+    setRichOutput(
+      "step3-no-status-description-4",
+      [
+        "Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
+      ]
+    );
     setOutput("step3-no-status-cta", "Bespreek je situatie");
     showStep3NoStatusIcon("too-late");
     setStep3NoStatusCardColor("red");
