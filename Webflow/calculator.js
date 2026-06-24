@@ -96,7 +96,7 @@ function initCalculator() {
       });
   }
 
-  function setStep3NoStatusCardColor(color) {
+  function setStep3NoStatusElementColor(color) {
     document
       .querySelectorAll(
         '[data-tempres-element="step3-no-status-element"]'
@@ -1022,7 +1022,7 @@ function initCalculator() {
         ]
       );
       setOutput("step3-no-status-cta", "Plan je terugkeer");
-      setStep3NoStatusCardColor("yellow");
+      setStep3NoStatusElementColor("yellow");
       showStep3NoStatusIcon("return-needed");
       return;
     }
@@ -1090,7 +1090,7 @@ function initCalculator() {
       );
       setOutput("step3-no-status-cta", "Aanvraag starten");
       showStep3NoStatusIcon("can-start");
-      setStep3NoStatusCardColor("green");
+      setStep3NoStatusElementColor("green");
       return;
     }
 // Je kunt nu aanvragen (met boete) - GREEN
@@ -1141,7 +1141,7 @@ function initCalculator() {
       );
       setOutput("step3-no-status-cta", "Aanvraag starten");
       showStep3NoStatusIcon("can-start");
-      setStep3NoStatusCardColor("green");
+      setStep3NoStatusElementColor("green");
       return;
     }
 
@@ -1193,7 +1193,7 @@ function initCalculator() {
     );
     setOutput("step3-no-status-cta", "Bespreek je situatie");
     showStep3NoStatusIcon("too-late");
-    setStep3NoStatusCardColor("red");
+    setStep3NoStatusElementColor("red");
   }
 
 // STEP 4 = NEE
