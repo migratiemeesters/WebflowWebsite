@@ -1032,10 +1032,6 @@ function initCalculator() {
       todayParts.utcMs <= idealLatestStartParts.utcMs
     ) {
       setOutput("step3-no-status-title", "Je kunt nu aanvragen")
-      setOutput(
-        "step3-no-status-description",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
-      );
       setRichOutput(
         "step3-no-status-description-1",
         [
