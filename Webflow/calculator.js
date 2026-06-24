@@ -1041,7 +1041,15 @@ function initCalculator() {
       setRichOutput(
         "step3-no-status-description-2",
         [
-          "Je ideale aanvraagperiode loopt tot en met ",
+          "Je ideale aanvraagperiode loopt van ",
+          {
+            text: formatDateParts(
+              earliestStartParts
+            ),
+            className:
+              "result-date result-date-bold"
+          },
+          " tot en met ",
           {
             text: formatDateParts(
               idealLatestStartParts
