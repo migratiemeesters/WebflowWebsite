@@ -1036,6 +1036,54 @@ function initCalculator() {
         "step3-no-status-description",
         `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
+      setRichOutput(
+        "step3-no-status-description-1",
+        [
+          "De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning."
+        ]
+      );
+      setRichOutput(
+        "step3-no-status-description-2",
+        [
+          "Je ideale aanvraagperiode loopt tot en met ",
+          {
+            text: formatDateParts(
+              idealLatestStartParts
+            ),
+            className:
+              "result-date result-date-bold"
+          },
+          "."
+        ]
+      );
+      setRichOutput(
+        "step3-no-status-description-3",
+        [
+          "Dien je de aanvraag in na ",
+          {
+            text: formatDateParts(
+              idealLatestStartParts
+            ),
+            className:
+              "result-date result-date-bold"
+          },
+          ", dan geldt een boete van 669.012 guaraní."
+        ]
+      );
+      setRichOutput(
+        "step3-no-status-description-4",
+        [
+          "Je kunt nog aanvragen tot en met ",
+          {
+            text: formatDateParts(
+              latestStartParts
+            ),
+            className:
+              "result-date result-date-bold"
+          },
+          "."
+        ]
+      );
       setOutput("step3-no-status-cta", "Aanvraag starten");
       showStep3NoStatusIcon("can-start");
       setStep3NoStatusCardColor("green");
