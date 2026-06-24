@@ -99,7 +99,7 @@ function initCalculator() {
   function setStep3NoStatusCardColor(color) {
     document
       .querySelectorAll(
-        '[data-tempres-element="step3-no-status-card"]'
+        '[data-tempres-element="step3-no-status-element"]'
       )
       .forEach((element) => {
         element.classList.remove(
