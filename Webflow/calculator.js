@@ -57,51 +57,6 @@ function initCalculator() {
         `[data-tempres-output="${key}"]`
       )
       .forEach((element) => {
-        // Remove the previous content.
-        element.replaceChildren();
-
-        parts.forEach((part) => {
-          // Normal text.
-          if (typeof part === "string") {
-            element.appendChild(
-              document.createTextNode(part)
-            );
-
-            return;
-          }
-
-          // Line break.
-          if (part?.type === "break") {
-            element.appendChild(
-              document.createElement("br")
-            );
-
-            return;
-          }
-
-          // Styled dynamic text, such as a date.
-          if (part?.text !== undefined) {
-            const span =
-              document.createElement("span");
-
-            span.className =
-              part.className || "result-date";
-
-            span.textContent =
-              String(part.text);
-
-            element.appendChild(span);
-          }
-        });
-      });
-  }
-
-  function setRichOutput(key, parts) {
-    document
-      .querySelectorAll(
-        `[data-tempres-output="${key}"]`
-      )
-      .forEach((element) => {
         element.replaceChildren();
 
         parts.forEach((part) => {
@@ -1015,7 +970,7 @@ function initCalculator() {
       resetStep3NoStatusOutputs();
       return;
     }
-    
+
 // Terug keer naar Paraguay Nodig - YELLOW
 
     if (todayParts.utcMs >= issueDateParts.utcMs && todayParts.utcMs < earliestStartParts.utcMs) {
