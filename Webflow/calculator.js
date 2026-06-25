@@ -1588,6 +1588,7 @@ function initCalculator() {
       `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang van een tijdelijke verblijfsvergunning naar een permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
     setOutput("step3-yes-status-cta", "Tijdelijke verblijfsvergunning verlengen");
+    setStep3YesStatusElementColor("red");
     showStep3YesStatusIcon("too-late");
 
     setOutput("eligibility", "Directe overgang naar permanent niet mogelijk.");
@@ -1618,6 +1619,7 @@ function initCalculator() {
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Je ideale aanvraagperiode loopt van ${earliestStartText} tot en met ${idealLatestStartText}. Dien je de aanvraag in na ${idealLatestStartText}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${latestStartText}.`
       );
       setOutput("step3-yes-status-cta", "Plan je aanvraag");
+      setStep3YesStatusElementColor("yellow");
       showStep3YesStatusIcon("too-early");
       return;
     }
@@ -1629,6 +1631,7 @@ function initCalculator() {
         `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("step3-yes-status-cta", "Aanvraag starten");
+      setStep3YesStatusElementColor("green");
       showStep3YesStatusIcon("can-start");
       return;
     }
@@ -1640,6 +1643,7 @@ function initCalculator() {
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
       setOutput("step3-yes-status-cta", "Aanvraag starten");
+      setStep3YesStatusElementColor("green");
       showStep3YesStatusIcon("can-start");
       return;
     }
@@ -1659,6 +1663,7 @@ function initCalculator() {
       Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
     setOutput("step3-yes-status-cta", "Bespreek je situatie");
+    setStep3YesStatusElementColor("red");
     showStep3YesStatusIcon("too-late");
   }
 
@@ -1742,7 +1747,15 @@ function initCalculator() {
     setOutput("ideal-latest-start", idealLatestStartParts ? formatDateParts(idealLatestStartParts) : "-");
     setOutput("latest-start", latestStartParts ? formatDateParts(latestStartParts) : "-");
 
-    updatePrCurrentStatus(earliestStartParts, idealLatestStartParts, latestStartParts);
+    if (departureChoice === "yes") {
+      updateStep3YesStatus(
+        earliestStartParts,
+        idealLatestStartParts,
+        latestStartParts
+      );
+    } else {
+      resetStep3YesStatusOutputs();
+    }
 
     const returnDeadlineParts = updateReturnDeadlineOutputs(
       issueDateParts,
