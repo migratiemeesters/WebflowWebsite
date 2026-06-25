@@ -96,6 +96,62 @@ function initCalculator() {
       });
   }
 
+  function setRichOutput(key, parts) {
+    document
+      .querySelectorAll(
+        `[data-tempres-output="${key}"]`
+      )
+      .forEach((element) => {
+        element.replaceChildren();
+
+        parts.forEach((part) => {
+          // Normal text.
+          if (typeof part === "string") {
+            element.appendChild(
+              document.createTextNode(part)
+            );
+
+            return;
+          }
+
+          // Optional line break support.
+          if (part?.type === "break") {
+            element.appendChild(
+              document.createElement("br")
+            );
+
+            return;
+          }
+
+          // Styled dynamic text.
+          if (part?.text !== undefined) {
+            const span =
+              document.createElement("span");
+
+            span.className =
+              part.className || "result-date";
+
+            span.textContent =
+              String(part.text);
+
+            element.appendChild(span);
+          }
+        });
+
+        const wrapper =
+          document.querySelector(
+            `[data-tempres-output-wrapper="${key}"]`
+          );
+
+        if (wrapper) {
+          const hasContent =
+            element.textContent.trim().length > 0;
+
+          wrapper.hidden = !hasContent;
+        }
+      });
+  }
+
   function setStep3NoStatusElementColor(color) {
     document
       .querySelectorAll(
