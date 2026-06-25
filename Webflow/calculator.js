@@ -176,15 +176,34 @@ function initCalculator() {
     hide(document.querySelector('[data-step5-branch="main"]'));
   }
 
-  function hideAllPrStatusIcons() {
-    document.querySelectorAll('[data-pr-status-icon="too-early"]').forEach(hide);
-    document.querySelectorAll('[data-pr-status-icon="can-start"]').forEach(hide);
-    document.querySelectorAll('[data-pr-status-icon="too-late"]').forEach(hide);
+  function hideAllStep3YesStatusIcons() {
+    document
+      .querySelectorAll(
+        '[data-step3-yes-status-icon="too-early"]'
+      )
+      .forEach(hide);
+
+    document
+      .querySelectorAll(
+        '[data-step3-yes-status-icon="can-start"]'
+      )
+      .forEach(hide);
+
+    document
+      .querySelectorAll(
+        '[data-step3-yes-status-icon="too-late"]'
+      )
+      .forEach(hide);
   }
 
-  function showPrStatusIcon(state) {
-    hideAllPrStatusIcons();
-    document.querySelectorAll(`[data-pr-status-icon="${state}"]`).forEach(showBlock);
+  function showStep3YesStatusIcon(state) {
+    hideAllStep3YesStatusIcons();
+
+    document
+      .querySelectorAll(
+        `[data-step3-yes-status-icon="${state}"]`
+      )
+      .forEach(showBlock);
   }
 
   function hideAllStep3NoStatusIcons() {
@@ -954,11 +973,39 @@ function initCalculator() {
     setStepComplete(5, step5ShouldShow && step5Complete);
   }
 
-  function resetPrStatusOutputs() {
-    setOutput("pr-current-status-title", "");
-    setOutput("pr-current-status-description", "");
-    setOutput("pr-current-status-cta", "Neem contact op");
-    hideAllPrStatusIcons();
+  function resetStep3YesStatusOutputs() {
+    setOutput(
+      "step3-yes-status-title",
+      ""
+    );
+
+    setRichOutput(
+      "step3-yes-status-description-1",
+      []
+    );
+
+    setRichOutput(
+      "step3-yes-status-description-2",
+      []
+    );
+
+    setRichOutput(
+      "step3-yes-status-description-3",
+      []
+    );
+
+    setRichOutput(
+      "step3-yes-status-description-4",
+      []
+    );
+
+    setOutput(
+      "step3-yes-status-cta",
+      ""
+    );
+
+    setStep3YesStatusElementColor(null);
+    hideAllStep3YesStatusIcons();
   }
 
   function resetStep3NoStatusOutputs() {
@@ -1499,6 +1546,7 @@ function initCalculator() {
       earliestStartParts &&
       todayParts.utcMs < earliestStartParts.utcMs;
 
+// STEP 4 = NEE
     setOutput("return-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
 
     if (periodNotOpenYet) {
@@ -1515,13 +1563,14 @@ function initCalculator() {
 
     showReturnStatusIcon("too-late");
 
-    setOutput("pr-current-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
+// STEP 3 = JA
+    setOutput("step3-yes-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
     setOutput(
-      "pr-current-status-description",
+      "step3-yes-status-description-1",
       `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang van een tijdelijke verblijfsvergunning naar een permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
-    setOutput("pr-current-status-cta", "Tijdelijke verblijfsvergunning verlengen");
-    showPrStatusIcon("too-late");
+    setOutput("step3-yes-status-cta", "Tijdelijke verblijfsvergunning verlengen");
+    showStep3YesStatusIcon("too-late");
 
     setOutput("eligibility", "Directe overgang naar permanent niet mogelijk.");
     setOutput(
@@ -1532,11 +1581,11 @@ function initCalculator() {
 
 // STEP 3 = JA
 
-  function updatePrCurrentStatus(earliestStartParts, idealLatestStartParts, latestStartParts) {
+  function updateStep3YesStatus(earliestStartParts, idealLatestStartParts, latestStartParts) {
     const todayParts = getTodayDateParts();
 
     if (!earliestStartParts || !idealLatestStartParts || !latestStartParts || !todayParts) {
-      resetPrStatusOutputs();
+      resetStep3YesStatusOutputs();
       return;
     }
 
@@ -1545,35 +1594,35 @@ function initCalculator() {
       const idealLatestStartText = formatDateParts(idealLatestStartParts);
       const latestStartText = formatDateParts(latestStartParts);
 
-      setOutput("pr-current-status-title", "Nog niet beschikbaar");
+      setOutput("step3-yes-status-title", "Nog niet beschikbaar");
       setOutput(
-        "pr-current-status-description",
+        "step3-yes-status-description-1",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Je ideale aanvraagperiode loopt van ${earliestStartText} tot en met ${idealLatestStartText}. Dien je de aanvraag in na ${idealLatestStartText}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${latestStartText}.`
       );
-      setOutput("pr-current-status-cta", "Plan je aanvraag");
-      showPrStatusIcon("too-early");
+      setOutput("step3-yes-status-cta", "Plan je aanvraag");
+      showStep3YesStatusIcon("too-early");
       return;
     }
 
     if (todayParts.utcMs >= earliestStartParts.utcMs && todayParts.utcMs <= idealLatestStartParts.utcMs) {
-      setOutput("pr-current-status-title", "Je kunt nu aanvragen");
+      setOutput("step3-yes-status-title", "Je kunt nu aanvragen");
       setOutput(
-        "pr-current-status-description",
+        "step3-yes-status-description-1",
         `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
-      setOutput("pr-current-status-cta", "Aanvraag starten");
-      showPrStatusIcon("can-start");
+      setOutput("step3-yes-status-cta", "Aanvraag starten");
+      showStep3YesStatusIcon("can-start");
       return;
     }
 
     if (todayParts.utcMs > idealLatestStartParts.utcMs && todayParts.utcMs <= latestStartParts.utcMs) {
-      setOutput("pr-current-status-title", "Je kunt nu aanvragen met een boete");
+      setOutput("step3-yes-status-title", "Je kunt nu aanvragen met een boete");
       setOutput(
-        "pr-current-status-description",
+        "step3-yes-status-description-1",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
-      setOutput("pr-current-status-cta", "Aanvraag starten");
-      showPrStatusIcon("can-start");
+      setOutput("step3-yes-status-cta", "Aanvraag starten");
+      showStep3YesStatusIcon("can-start");
       return;
     }
 
@@ -1584,15 +1633,15 @@ function initCalculator() {
       timeZone: "UTC"
     });
 
-    setOutput("pr-current-status-title", "Aanvraagperiode verstreken");
+    setOutput("step3-yes-status-title", "Aanvraagperiode verstreken");
     setOutput(
-      "pr-current-status-description",
+      "step3-yes-status-description-1",
       `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. 
 
       Vandaag is het ${currentDateText}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
     );
-    setOutput("pr-current-status-cta", "Bespreek je situatie");
-    showPrStatusIcon("too-late");
+    setOutput("step3-yes-status-cta", "Bespreek je situatie");
+    showStep3YesStatusIcon("too-late");
   }
 
   function updateReturnDeadlineOutputs(issueDateParts, departureChoice, earliestStartParts) {
@@ -1643,7 +1692,7 @@ function initCalculator() {
     const wrap = document.querySelector('[data-step3-date-error="wrap"]');
     if (wrap) hide(wrap);
     getTripCards().forEach(clearTripError);
-    resetPrStatusOutputs();
+    resetStep3YesStatusOutputs();
     resetStep3NoStatusOutputs();
   }
 
