@@ -1015,7 +1015,9 @@ function initCalculator() {
       resetStep3NoStatusOutputs();
       return;
     }
+    
 // Terug keer naar Paraguay Nodig - YELLOW
+
     if (todayParts.utcMs >= issueDateParts.utcMs && todayParts.utcMs < earliestStartParts.utcMs) {
       setOutput("step3-no-status-title", "Terugkeer naar Paraguay nodig");
       setRichOutput(
@@ -1082,7 +1084,9 @@ function initCalculator() {
       showStep3NoStatusIcon("return-needed");
       return;
     }
+
 // Je kunt nu aanvragen (zonder boete) - GREEN
+
     if (
       todayParts.utcMs >= earliestStartParts.utcMs &&
       todayParts.utcMs <= idealLatestStartParts.utcMs
@@ -1149,7 +1153,9 @@ function initCalculator() {
       setStep3NoStatusElementColor("green");
       return;
     }
+
 // Je kunt nu aanvragen (met boete) - GREEN
+
     if (
       todayParts.utcMs > idealLatestStartParts.utcMs &&
       todayParts.utcMs <= latestStartParts.utcMs
@@ -1207,7 +1213,9 @@ function initCalculator() {
       year: "numeric",
       timeZone: "UTC"
     });
+
 // Aanvraagperiode verstreken - RED
+
     setOutput("step3-no-status-title", "Aanvraagperiode verstreken");
     setRichOutput(
       "step3-no-status-description-1",
@@ -1238,14 +1246,12 @@ function initCalculator() {
           className:
             "result-date result-date-bold"
         },
-        "."
+        ". Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
       ]
     );
     setRichOutput(
       "step3-no-status-description-4",
-      [
-        "Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
-      ]
+      []
     );
     setOutput("step3-no-status-cta", "Bespreek je situatie");
     showStep3NoStatusIcon("too-late");
