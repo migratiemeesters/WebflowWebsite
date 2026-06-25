@@ -139,6 +139,24 @@ function initCalculator() {
       });
   }
 
+  function setStep3YesStatusElementColor(color) {
+    document
+      .querySelectorAll(
+        '[data-tempres-element="step3-yes-status-element"]'
+      )
+      .forEach((element) => {
+        element.classList.remove(
+          "green",
+          "yellow",
+          "red"
+        );
+
+        if (color) {
+          element.classList.add(color);
+        }
+      });
+  }
+
   function setStepComplete(stepNumber, isComplete) {
     document.querySelectorAll(`[data-step-icon="${stepNumber}"]`).forEach((el) => {
       el.classList.toggle("is-complete", !!isComplete);
