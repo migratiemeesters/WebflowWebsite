@@ -51,6 +51,7 @@ function initCalculator() {
     });
   }
 
+
   function setRichOutput(key, parts) {
     document
       .querySelectorAll(
@@ -69,7 +70,7 @@ function initCalculator() {
             return;
           }
 
-          // Optional line break support.
+          // Optional line break.
           if (part?.type === "break") {
             element.appendChild(
               document.createElement("br")
@@ -93,17 +94,30 @@ function initCalculator() {
           }
         });
 
-        const wrapper =
-          document.querySelector(
+        const hasContent =
+          element.textContent.trim().length > 0;
+
+        document
+          .querySelectorAll(
             `[data-tempres-output-wrapper="${key}"]`
-          );
+          )
+          .forEach((wrapper) => {
+            if (hasContent) {
+              wrapper.style.removeProperty(
+                "display"
+              );
 
-        if (wrapper) {
-          const hasContent =
-            element.textContent.trim().length > 0;
-
-          wrapper.hidden = !hasContent;
-        }
+              wrapper.removeAttribute(
+                "hidden"
+              );
+            } else {
+              wrapper.style.setProperty(
+                "display",
+                "none",
+                "important"
+              );
+            }
+          });
       });
   }
 
