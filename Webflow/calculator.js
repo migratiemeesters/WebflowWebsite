@@ -1779,8 +1779,11 @@ function initCalculator() {
       [
         "De uiterste datum om te starten was ",
         {
-          text: formatDateParts(latestStartParts),
-          className: "result-date result-date-bold"
+          text: formatDateParts(
+            latestStartParts
+          ),
+          className:
+            "result-date result-date-bold"
         },
         "."
       ]
@@ -1791,7 +1794,8 @@ function initCalculator() {
         "Vandaag is het ",
         {
           text: currentDateText,
-          className: "result-date result-date-bold"
+          className:
+            "result-date result-date-bold"
         },
         ". Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
       ]
@@ -1804,9 +1808,12 @@ function initCalculator() {
       "step3-yes-status-cta",
       "Bespreek je situatie"
     );
-
-    setStep3YesStatusElementColor("red");
-    showStep3YesStatusIcon("too-late");
+    setStep3YesStatusElementColor(
+      "red"
+    );
+    showStep3YesStatusIcon(
+      "too-late"
+    );
 
   function updateReturnDeadlineOutputs(issueDateParts, departureChoice, earliestStartParts) {
     const departureDateParts = getDepartureDateParts();
