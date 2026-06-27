@@ -1856,23 +1856,37 @@ function initCalculator() {
     setOutput("ideal-latest-start", idealLatestStartParts ? formatDateParts(idealLatestStartParts) : "-");
     setOutput("latest-start", latestStartParts ? formatDateParts(latestStartParts) : "-");
 
-    if (departureChoice === "yes") {
-      updateStep3YesStatus(
-        earliestStartParts,
-        idealLatestStartParts,
-        latestStartParts
-      );
-    } else {
-      resetStep3YesStatusOutputs();
-    }
-
     const returnDeadlineParts = updateReturnDeadlineOutputs(
       issueDateParts,
       departureChoice,
       earliestStartParts
     );
 
-    if (departureChoice === "no") {
+    const followupChoice = getSelectedFollowupChoice();
+
+    if (departureChoice === "yes") {
+      updateStep3YesStatus(
+        earliestStartParts,
+        idealLatestStartParts,
+        latestStartParts
+      );
+
+      resetStep3NoStatusOutputs();
+    } else if (
+      departureChoice === "no" &&
+      followupChoice === "yes"
+    ) {
+      updateStep3YesStatus(
+        earliestStartParts,
+        idealLatestStartParts,
+        latestStartParts
+      );
+
+      resetStep3NoStatusOutputs();
+    } else if (
+      departureChoice === "no" &&
+      followupChoice === "no"
+    ) {
       updateStep3NoStatusDescription(
         issueDateParts,
         visitDeadlineParts,
@@ -1880,7 +1894,10 @@ function initCalculator() {
         idealLatestStartParts,
         latestStartParts
       );
+
+      resetStep3YesStatusOutputs();
     } else {
+      resetStep3YesStatusOutputs();
       resetStep3NoStatusOutputs();
     }
 
