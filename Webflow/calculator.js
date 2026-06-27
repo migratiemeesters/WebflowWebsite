@@ -1637,14 +1637,51 @@ function initCalculator() {
     }
 
     if (todayParts.utcMs < earliestStartParts.utcMs) {
-      const earliestStartText = formatDateParts(earliestStartParts);
-      const idealLatestStartText = formatDateParts(idealLatestStartParts);
-      const latestStartText = formatDateParts(latestStartParts);
-
       setOutput("step3-yes-status-title", "Nog niet beschikbaar");
-      setOutput(
+
+      setRichOutput(
         "step3-yes-status-description-1",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Je ideale aanvraagperiode loopt van ${earliestStartText} tot en met ${idealLatestStartText}. Dien je de aanvraag in na ${idealLatestStartText}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${latestStartText}.`
+        [
+          "Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-2",
+        [
+          "Je ideale aanvraagperiode loopt van ",
+          {
+            text: formatDateParts(earliestStartParts),
+            className: "result-date result-date-bold"
+          },
+          " tot en met ",
+          {
+            text: formatDateParts(idealLatestStartParts),
+            className: "result-date result-date-bold"
+          },
+          "."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-3",
+        [
+          "Dien je de aanvraag in na ",
+          {
+            text: formatDateParts(idealLatestStartParts),
+            className: "result-date result-date-bold"
+          },
+          ", dan geldt een boete van 669.012 guaraní."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-4",
+        [
+          "Je kunt nog aanvragen tot en met ",
+          {
+            text: formatDateParts(latestStartParts),
+            className: "result-date result-date-bold"
+          },
+          "."
+        ]
       );
       setOutput("step3-yes-status-cta", "Plan je aanvraag");
       setStep3YesStatusElementColor("yellow");
@@ -1652,11 +1689,55 @@ function initCalculator() {
       return;
     }
 
-    if (todayParts.utcMs >= earliestStartParts.utcMs && todayParts.utcMs <= idealLatestStartParts.utcMs) {
+    if (
+      todayParts.utcMs >= earliestStartParts.utcMs &&
+      todayParts.utcMs <= idealLatestStartParts.utcMs
+    ) {
       setOutput("step3-yes-status-title", "Je kunt nu aanvragen");
-      setOutput(
+
+      setRichOutput(
         "step3-yes-status-description-1",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        [
+          "De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt nu zonder boete starten met de aanvraag voor je permanente verblijfsvergunning."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-2",
+        [
+          "Je ideale aanvraagperiode loopt van ",
+          {
+            text: formatDateParts(earliestStartParts),
+            className: "result-date result-date-bold"
+          },
+          " tot en met ",
+          {
+            text: formatDateParts(idealLatestStartParts),
+            className: "result-date result-date-bold"
+          },
+          "."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-3",
+        [
+          "Dien je de aanvraag in na ",
+          {
+            text: formatDateParts(idealLatestStartParts),
+            className: "result-date result-date-bold"
+          },
+          ", dan geldt een boete van 669.012 guaraní."
+        ]
+      );
+      setRichOutput(
+        "step3-yes-status-description-4",
+        [
+          "Je kunt nog aanvragen tot en met ",
+          {
+            text: formatDateParts(latestStartParts),
+            className: "result-date result-date-bold"
+          },
+          "."
+        ]
       );
       setOutput("step3-yes-status-cta", "Aanvraag starten");
       setStep3YesStatusElementColor("green");
