@@ -1769,14 +1769,12 @@ function initCalculator() {
       "step3-yes-status-title",
       "Aanvraagperiode verstreken"
     );
-
     setRichOutput(
       "step3-yes-status-description-1",
       [
         "De aanvraagperiode voor je permanente verblijfsvergunning is verstreken."
       ]
     );
-
     setRichOutput(
       "step3-yes-status-description-2",
       [
@@ -1788,7 +1786,6 @@ function initCalculator() {
         "."
       ]
     );
-
     setRichOutput(
       "step3-yes-status-description-3",
       [
@@ -1800,12 +1797,10 @@ function initCalculator() {
         ". Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
       ]
     );
-
     setRichOutput(
       "step3-yes-status-description-4",
       []
     );
-
     setOutput(
       "step3-yes-status-cta",
       "Bespreek je situatie"
