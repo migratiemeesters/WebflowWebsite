@@ -1862,17 +1862,10 @@ function initCalculator() {
       earliestStartParts
     );
 
+
     const followupChoice = getSelectedFollowupChoice();
 
-    if (departureChoice === "yes") {
-      updateStep3YesStatus(
-        earliestStartParts,
-        idealLatestStartParts,
-        latestStartParts
-      );
-
-      resetStep3NoStatusOutputs();
-    } else if (
+    if (
       departureChoice === "no" &&
       followupChoice === "yes"
     ) {
