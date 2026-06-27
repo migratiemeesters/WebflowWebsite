@@ -1598,12 +1598,12 @@ function initCalculator() {
     if (periodNotOpenYet) {
       setOutput(
         "return-status-description",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk zodra de aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk zodra de aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
       );
     } else {
       setOutput(
         "return-status-description",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
       );
     }
 
