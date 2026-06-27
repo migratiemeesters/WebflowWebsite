@@ -1768,52 +1768,50 @@ function initCalculator() {
       "step3-yes-status-title",
       "Aanvraagperiode verstreken"
     );
+
     setRichOutput(
       "step3-yes-status-description-1",
       [
         "De aanvraagperiode voor je permanente verblijfsvergunning is verstreken."
       ]
     );
+
     setRichOutput(
       "step3-yes-status-description-2",
       [
         "De uiterste datum om te starten was ",
         {
-          text: formatDateParts(
-            latestStartParts
-          ),
-          className:
-            "result-date result-date-bold"
+          text: formatDateParts(latestStartParts),
+          className: "result-date result-date-bold"
         },
         "."
       ]
     );
+
     setRichOutput(
       "step3-yes-status-description-3",
       [
         "Vandaag is het ",
         {
           text: currentDateText,
-          className:
-            "result-date result-date-bold"
+          className: "result-date result-date-bold"
         },
         ". Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
       ]
     );
+
     setRichOutput(
       "step3-yes-status-description-4",
       []
     );
+
     setOutput(
       "step3-yes-status-cta",
       "Bespreek je situatie"
     );
-    setStep3YesStatusElementColor(
-      "red"
-    );
-    showStep3YesStatusIcon(
-      "too-late"
-    );
+
+    setStep3YesStatusElementColor("red");
+    showStep3YesStatusIcon("too-late");
 
   function updateReturnDeadlineOutputs(issueDateParts, departureChoice, earliestStartParts) {
     const departureDateParts = getDepartureDateParts();
