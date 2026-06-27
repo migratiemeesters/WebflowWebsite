@@ -1027,9 +1027,37 @@ function initCalculator() {
   }
 
   function resetStep3NoStatusOutputs() {
-    setOutput("step3-no-status-title", "");
-    setOutput("step3-no-status-description", "");
-    setOutput("step3-no-status-cta", "");
+    setOutput(
+      "step3-no-status-title",
+      ""
+    );
+
+    setRichOutput(
+      "step3-no-status-description-1",
+      []
+    );
+
+    setRichOutput(
+      "step3-no-status-description-2",
+      []
+    );
+
+    setRichOutput(
+      "step3-no-status-description-3",
+      []
+    );
+
+    setRichOutput(
+      "step3-no-status-description-4",
+      []
+    );
+
+    setOutput(
+      "step3-no-status-cta",
+      ""
+    );
+
+    setStep3NoStatusElementColor(null);
     hideAllStep3NoStatusIcons();
   }
 
