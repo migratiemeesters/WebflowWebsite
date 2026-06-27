@@ -1785,41 +1785,10 @@ function initCalculator() {
       resetStep3YesStatusOutputs();
     }
 
-    const returnDeadlineParts =
-      updateReturnDeadlineOutputs(
-        issueDateParts,
-        departureChoice,
-        earliestStartParts
-      );
-
-    const returnDeadlineOverstayCheck =
-      getVisitDeadlineOverstayCheck(
-        issueDateParts,
-        returnDeadlineParts,
-        latestStartParts
-      );
-
-    if (
-      getSelectedExtraTripsChoice() === "no" &&
-      returnDeadlineOverstayCheck.applicable &&
-      returnDeadlineOverstayCheck.blocked
-    ) {
-      showPermanentBlockedByVisitDeadline(
-        returnDeadlineParts,
-        earliestStartParts
-      );
-
-      updateTripOutputs();
-      updateStepIcons(issueDateParts);
-      return;
-    }
-
-    updateReturnStatusFromStep3(
+    const returnDeadlineParts = updateReturnDeadlineOutputs(
       issueDateParts,
-      returnDeadlineParts,
-      earliestStartParts,
-      idealLatestStartParts,
-      latestStartParts
+      departureChoice,
+      earliestStartParts
     );
 
     if (departureChoice === "no") {
@@ -1837,8 +1806,10 @@ function initCalculator() {
     if (departureChoice !== "yes") {
       const wrap = document.querySelector('[data-step3-date-error="wrap"]');
       if (wrap) hide(wrap);
+
       resetExtraTripsQuestion();
       resetTripCardData();
+      resetReturnStatusOutputs();
       updateBranchVisibility(issueDateParts);
 
       setOutput("visit-rule", "Geen vertrek na de afgiftedatum opgegeven.");
@@ -1849,6 +1820,7 @@ function initCalculator() {
       setOutput("permanent-last-return", "-");
       setOutput("permanent-trip-status", "Niet van toepassing in dit pad.");
       setOutput("last-departure-paraguay", "-");
+
       setTripValidationMessage([]);
       getTripCards().forEach(clearTripError);
       updateStepIcons(issueDateParts);
@@ -1860,8 +1832,10 @@ function initCalculator() {
     if (!departureDateParts) {
       const wrap = document.querySelector('[data-step3-date-error="wrap"]');
       if (wrap) hide(wrap);
+
       resetExtraTripsQuestion();
       resetTripCardData();
+      resetReturnStatusOutputs();
       updateBranchVisibility(issueDateParts);
 
       setOutput("visit-rule", "Kies eerst een geldige eerste vertrekdatum.");
@@ -1872,19 +1846,25 @@ function initCalculator() {
       setOutput("permanent-last-return", "-");
       setOutput("permanent-trip-status", "Vul eerst 'Datum van eerste vertrek uit Paraguay' in.");
       setOutput("last-departure-paraguay", "-");
+
       setTripValidationMessage([]);
       getTripCards().forEach(clearTripError);
       updateStepIcons(issueDateParts);
       return;
     }
 
-    const daysUntilFirstDeparture = daysBetweenParts(issueDateParts, departureDateParts);
+    const daysUntilFirstDeparture = daysBetweenParts(
+      issueDateParts,
+      departureDateParts
+    );
 
     if (daysUntilFirstDeparture < 0) {
       const wrap = document.querySelector('[data-step3-date-error="wrap"]');
       if (wrap) showBlock(wrap);
+
       resetExtraTripsQuestion();
       resetTripCardData();
+      resetReturnStatusOutputs();
       updateBranchVisibility(issueDateParts);
 
       setOutput("days-until-first-departure", "-");
@@ -1895,6 +1875,7 @@ function initCalculator() {
       setOutput("permanent-last-return", "-");
       setOutput("permanent-trip-status", "Controleer eerst 'Datum van eerste vertrek uit Paraguay'.");
       setOutput("last-departure-paraguay", "-");
+
       setTripValidationMessage([]);
       getTripCards().forEach(clearTripError);
       updateStepIcons(issueDateParts);
@@ -1903,6 +1884,7 @@ function initCalculator() {
 
     const wrap = document.querySelector('[data-step3-date-error="wrap"]');
     if (wrap) hide(wrap);
+
     updateBranchVisibility(issueDateParts);
 
     const extraTripsChoice = getSelectedExtraTripsChoice();
@@ -1918,10 +1900,43 @@ function initCalculator() {
     }
 
     const latestKnownDeparture = getLatestKnownDepartureDateParts();
+
     setOutput(
       "last-departure-paraguay",
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
+
+    if (extraTripsChoice === "no") {
+      const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(
+        issueDateParts,
+        returnDeadlineParts,
+        latestStartParts
+      );
+
+      if (
+        returnDeadlineOverstayCheck.applicable &&
+        returnDeadlineOverstayCheck.blocked
+      ) {
+        showPermanentBlockedByVisitDeadline(
+          returnDeadlineParts,
+          earliestStartParts
+        );
+
+        resetFinalStatusOutputs();
+        updateStepIcons(issueDateParts);
+        return;
+      }
+
+      updateReturnStatusFromStep3(
+        issueDateParts,
+        returnDeadlineParts,
+        earliestStartParts,
+        idealLatestStartParts,
+        latestStartParts
+      );
+    } else {
+      resetReturnStatusOutputs();
+    }
 
     updateTripOutputs();
 
@@ -1934,9 +1949,9 @@ function initCalculator() {
       );
     } else {
       resetFinalStatusOutputs();
-}
+    }
 
-updateStepIcons(issueDateParts);
+    updateStepIcons(issueDateParts);
   }
 
   function bindRecalculation(key) {
