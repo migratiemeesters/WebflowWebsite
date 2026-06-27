@@ -1745,13 +1745,58 @@ function initCalculator() {
       return;
     }
 
-    if (todayParts.utcMs > idealLatestStartParts.utcMs && todayParts.utcMs <= latestStartParts.utcMs) {
-      setOutput("step3-yes-status-title", "Je kunt nu aanvragen met een boete");
+    if (
+      todayParts.utcMs > idealLatestStartParts.utcMs &&
+      todayParts.utcMs <= latestStartParts.utcMs
+    ) {
       setOutput(
-        "step3-yes-status-description-1",
-        `Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten, maar de ideale aanvraagperiode zonder boete is inmiddels verstreken. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
+        "step3-yes-status-title",
+        "Je kunt nu aanvragen met een boete"
       );
-      setOutput("step3-yes-status-cta", "Aanvraag starten");
+
+      setRichOutput(
+        "step3-yes-status-description-1",
+        [
+          "Je kunt de aanvraag voor je permanente verblijfsvergunning nog steeds starten."
+        ]
+      );
+
+      setRichOutput(
+        "step3-yes-status-description-2",
+        [
+          "De ideale aanvraagperiode zonder boete is inmiddels verstreken."
+        ]
+      );
+
+      setRichOutput(
+        "step3-yes-status-description-3",
+        [
+          "Dien je de aanvraag in na ",
+          {
+            text: formatDateParts(idealLatestStartParts),
+            className: "result-date result-date-bold"
+          },
+          ", dan geldt een boete van 669.012 guaraní."
+        ]
+      );
+
+      setRichOutput(
+        "step3-yes-status-description-4",
+        [
+          "Je kunt nog aanvragen tot en met ",
+          {
+            text: formatDateParts(latestStartParts),
+            className: "result-date result-date-bold"
+          },
+          "."
+        ]
+      );
+
+      setOutput(
+        "step3-yes-status-cta",
+        "Aanvraag starten"
+      );
+
       setStep3YesStatusElementColor("green");
       showStep3YesStatusIcon("can-start");
       return;
