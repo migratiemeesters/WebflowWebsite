@@ -1785,11 +1785,34 @@ function initCalculator() {
       resetStep3YesStatusOutputs();
     }
 
-    const returnDeadlineParts = updateReturnDeadlineOutputs(
-      issueDateParts,
-      departureChoice,
-      earliestStartParts
-    );
+    const returnDeadlineParts =
+      updateReturnDeadlineOutputs(
+        issueDateParts,
+        departureChoice,
+        earliestStartParts
+      );
+
+    const returnDeadlineOverstayCheck =
+      getVisitDeadlineOverstayCheck(
+        issueDateParts,
+        returnDeadlineParts,
+        latestStartParts
+      );
+
+    if (
+      getSelectedExtraTripsChoice() === "no" &&
+      returnDeadlineOverstayCheck.applicable &&
+      returnDeadlineOverstayCheck.blocked
+    ) {
+      showPermanentBlockedByVisitDeadline(
+        returnDeadlineParts,
+        earliestStartParts
+      );
+
+      updateTripOutputs();
+      updateStepIcons(issueDateParts);
+      return;
+    }
 
     updateReturnStatusFromStep3(
       issueDateParts,
@@ -1899,25 +1922,6 @@ function initCalculator() {
       "last-departure-paraguay",
       latestKnownDeparture ? formatDateParts(latestKnownDeparture) : "-"
     );
-
-    const returnDeadlineAfterEarliestStart =
-      returnDeadlineParts &&
-      earliestStartParts &&
-      returnDeadlineParts.utcMs > earliestStartParts.utcMs;
-
-    const returnDeadlineOverstayCheck = getVisitDeadlineOverstayCheck(issueDateParts, returnDeadlineParts, latestStartParts);
-
-    if (
-      extraTripsChoice !== "yes" &&
-      !returnDeadlineAfterEarliestStart &&
-      returnDeadlineOverstayCheck.applicable &&
-      returnDeadlineOverstayCheck.blocked
-    ) {
-      showPermanentBlockedByVisitDeadline(returnDeadlineParts, earliestStartParts);
-      updateTripOutputs();
-      updateStepIcons(issueDateParts);
-      return;
-    }
 
     updateTripOutputs();
 
