@@ -157,6 +157,24 @@ function initCalculator() {
       });
   }
 
+  function setStep4NoStatusElementColor(color) {
+    document
+      .querySelectorAll(
+        '[data-tempres-element="step4-no-status-element"]'
+      )
+      .forEach((element) => {
+        element.classList.remove(
+          "green",
+          "yellow",
+          "red"
+        );
+
+        if (color) {
+          element.classList.add(color);
+        }
+      });
+  }
+
   function setStepComplete(stepNumber, isComplete) {
     document.querySelectorAll(`[data-step-icon="${stepNumber}"]`).forEach((el) => {
       el.classList.toggle("is-complete", !!isComplete);
@@ -235,15 +253,15 @@ function initCalculator() {
     document.querySelectorAll(`[data-step3-no-status-icon="${state}"]`).forEach(showBlock);
   }
 
-  function hideAllReturnStatusIcons() {
-    document.querySelectorAll('[data-return-status-icon="return-needed"]').forEach(hide);
-    document.querySelectorAll('[data-return-status-icon="can-start"]').forEach(hide);
-    document.querySelectorAll('[data-return-status-icon="too-late"]').forEach(hide);
+  function hideAllStep4NoStatusIcons() {
+    document.querySelectorAll('[data-step4-no-status-icon="return-needed"]').forEach(hide);
+    document.querySelectorAll('[data-step4-no-status-icon="can-start"]').forEach(hide);
+    document.querySelectorAll('[data-step4-no-status-icon="too-late"]').forEach(hide);
   }
 
-  function showReturnStatusIcon(state) {
-    hideAllReturnStatusIcons();
-    document.querySelectorAll(`[data-return-status-icon="${state}"]`).forEach(showBlock);
+  function showStep4NoStatusIcon(state) {
+    hideAllStep4NoStatusIcons();
+    document.querySelectorAll(`[data-step4-no-status-icon="${state}"]`).forEach(showBlock);
   }
 
   function hideAllFinalStatusIcons() {
@@ -1062,10 +1080,38 @@ function initCalculator() {
   }
 
   function resetReturnStatusOutputs() {
-    setOutput("return-status-title", "");
-    setOutput("return-status-description", "");
-    setOutput("return-status-cta", "");
-    hideAllReturnStatusIcons();
+    setOutput(
+      "step4-no-status-title",
+      ""
+    );
+
+    setRichOutput(
+      "step4-no-status-description-1",
+      []
+    );
+
+    setRichOutput(
+      "step4-no-status-description-2",
+      []
+    );
+
+    setRichOutput(
+      "step4-no-status-description-3",
+      []
+    );
+
+    setRichOutput(
+      "step4-no-status-description-4",
+      []
+    );
+
+    setOutput(
+      "step4-no-status-cta",
+      ""
+    );
+
+    setStep4NoStatusElementColor(null);
+    hideAllStep4NoStatusIcons();
   }
 
 // STEP 3 = NO
@@ -1340,17 +1386,86 @@ function initCalculator() {
 
       if (returnDeadlineAfterEarliestStart) {
         if (todayParts.utcMs < earliestStartParts.utcMs) {
-          setOutput("return-status-title", "Nog niet beschikbaar");
           setOutput(
+            "step4-no-status-title",
+            "Nog niet beschikbaar"
+          );
+          setRichOutput(
             "return-deadline-text",
-            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ${formatDateParts(earliestStartParts)} en loopt, zonder boete, tot en met ${formatDateParts(idealLatestStartParts)}.`
+            [
+              "De uiterste terugkeerdatum naar Paraguay is ",
+              {
+                text: returnDeadlineText,
+                className: "result-date result-date-bold"
+              },
+              ". Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel. Je aanvraagperiode voor de permanente verblijfsvergunning start op ",
+              {
+                text: formatDateParts(earliestStartParts),
+                className: "result-date result-date-bold"
+              },
+              " en loopt, zonder boete, tot en met ",
+              {
+                text: formatDateParts(idealLatestStartParts),
+                className: "result-date result-date-bold"
+              },
+              "."
+            ]
           );
-          setOutput("return-status-cta", "Plan je terugkeer");
+          setRichOutput(
+            "step4-no-status-description-1",
+            [
+              "De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-2",
+            [
+              "Je kunt de aanvraag starten vanaf ",
+              {
+                text: formatDateParts(earliestStartParts),
+                className: "result-date result-date-bold"
+              },
+              " tot en met ",
+              {
+                text: formatDateParts(idealLatestStartParts),
+                className: "result-date result-date-bold"
+              },
+              "."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-3",
+            [
+              "Na ",
+              {
+                text: formatDateParts(idealLatestStartParts),
+                className: "result-date result-date-bold"
+              },
+              " kun je nog aanvragen tot en met ",
+              {
+                text: formatDateParts(latestStartParts),
+                className: "result-date result-date-bold"
+              },
+              ", maar dan geldt een boete van 669.012 guaraní."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-4",
+            [
+              "Je uiterste terugkeerdatum is ",
+              {
+                text: returnDeadlineText,
+                className: "result-date result-date-bold"
+              },
+              ". Je moet dus vóór deze datum terugkomen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten."
+            ]
+          );
           setOutput(
-            "return-status-description",
-            `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je kunt de aanvraag starten vanaf ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Je uiterste terugkeerdatum is ${returnDeadlineText}, je moet dus vóór deze datum terugkomen naar Paraguay om de aanvraag voor je permanente verblijfsvergunning te starten.`
+            "step4-no-status-cta",
+            "Plan je terugkeer"
           );
-          showReturnStatusIcon("return-needed");
+          setStep4NoStatusElementColor("yellow");
+          showStep4NoStatusIcon("return-needed");
           return;
         }
 
@@ -1368,7 +1483,7 @@ function initCalculator() {
             "return-status-description",
             `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt zonder boete de aanvraag voor je permanente verblijfsvergunning starten tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten. Je uiterste terugkeerdatum is ${returnDeadlineText}.`
           );
-          showReturnStatusIcon("return-needed");
+          showStep4NoStatusIcon("return-needed");
           return;
         }
 
@@ -1385,7 +1500,7 @@ function initCalculator() {
             "return-status-description",
             `De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar de periode zonder boete is verstreken. Na ${formatDateParts(idealLatestStartParts)} geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten. Je uiterste terugkeerdatum is ${returnDeadlineText}.`
           );
-          showReturnStatusIcon("return-needed");
+          showStep4NoStatusIcon("return-needed");
           return;
         }
 
@@ -1398,7 +1513,7 @@ function initCalculator() {
           "return-status-description",
           `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
         );
-        showReturnStatusIcon("too-late");
+        showStep4NoStatusIcon("too-late");
         return;
       }
 
@@ -1413,7 +1528,7 @@ function initCalculator() {
           `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten, omdat je nog niet bent teruggekeerd naar Paraguay. Het is belangrijk dat je uiterlijk op ${returnDeadlineText} terugkeert naar Paraguay om in aanmerking te komen voor je permanente verblijfsvergunning. Je ideale aanvraagperiode loopt van ${formatDateParts(earliestStartParts)} tot en met ${formatDateParts(idealLatestStartParts)}. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
         );
         setOutput("return-status-cta", "Plan je terugkeer");
-        showReturnStatusIcon("return-needed");
+        showStep4NoStatusIcon("return-needed");
         return;
       }
 
@@ -1431,7 +1546,7 @@ function initCalculator() {
         "return-status-description",
         `Je kunt de aanvraag voor je permanente verblijfsvergunning nog niet starten. Om in aanmerking te komen, moet je uiterlijk op ${returnDeadlineText} terugkeren naar Paraguay. Vanaf ${formatDateParts(earliestStartParts)} tot ${formatDateParts(idealLatestStartParts)} kun je je aanvraag starten. Dien je de aanvraag in na ${formatDateParts(idealLatestStartParts)}, dan geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}.`
       );
-      showReturnStatusIcon("return-needed");
+      showStep4NoStatusIcon("return-needed");
       return;
     }
 
@@ -1441,7 +1556,6 @@ function initCalculator() {
   }
 
 // STEP 4 = JA
-
   function updateFinalStatusForStep4Yes(earliestStartParts, idealLatestStartParts, latestStartParts, returnDeadlineParts) {
     const todayParts = getTodayDateParts();
     const chain = buildTripChain();
@@ -1607,7 +1721,7 @@ function initCalculator() {
       );
     }
 
-    showReturnStatusIcon("too-late");
+    showStep4NoStatusIcon("too-late");
 
 // STEP 3 = JA
     setOutput("step3-yes-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
@@ -1855,6 +1969,7 @@ function initCalculator() {
     showStep3YesStatusIcon("too-late");
   }
 
+// STEP 4 = ?
   function updateReturnDeadlineOutputs(issueDateParts, departureChoice, earliestStartParts) {
     const departureDateParts = getDepartureDateParts();
 
