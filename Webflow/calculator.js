@@ -2230,7 +2230,7 @@ function initCalculator() {
       setOutput("return-deadline", returnDeadlineText);
       setOutput(
         "return-deadline-text",
-        `Je uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel en kun je de aanvraag voor je permanente verblijfsvergunning starten op ${formatDateParts(earliestStartParts)}.`
+        `Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel.`
       );
 
       return returnDeadlineParts;
