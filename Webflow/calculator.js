@@ -1749,7 +1749,7 @@ function initCalculator() {
         ]
       );
       setOutput(
-        "step4-no-status-cta",ti
+        "step4-no-status-cta",
         "Plan je terugkeer"
       );
       setStep4NoStatusElementColor("yellow");
