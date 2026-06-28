@@ -1518,15 +1518,53 @@ function initCalculator() {
           todayParts.utcMs > idealLatestStartParts.utcMs &&
           todayParts.utcMs <= latestStartParts.utcMs
         ) {
-          setOutput("return-status-title", "Aanvraagperiode geopend met boete");
           setOutput(
+            "step4-no-status-title",
+            "Aanvraagperiode geopend met boete"
+          );
+          setRichOutput(
             "return-deadline-text",
-            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Je aanvraagperiode voor de permanente verblijfsvergunning is al geopend, maar de periode zonder boete is verstreken. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten.`
+            [
+              "Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-1",
+            [
+              "De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar de periode zonder boete is verstreken. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-2",
+            [
+              "Omdat je na ",
+              {
+                text: formatDateParts(idealLatestStartParts),
+                className: "result-date result-date-bold"
+              },
+              " aanvraagt, geldt een boete van 669.012 guaraní."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-3",
+            [
+              "Je kunt nog aanvragen tot en met ",
+              {
+                text: formatDateParts(latestStartParts),
+                className: "result-date result-date-bold"
+              },
+              "."
+            ]
+          );
+          setRichOutput(
+            "step4-no-status-description-4",
+            []
           );
           setOutput(
-            "return-status-description",
-            `De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar de periode zonder boete is verstreken. Na ${formatDateParts(idealLatestStartParts)} geldt een boete van 669.012 guaraní. Je kunt nog aanvragen tot en met ${formatDateParts(latestStartParts)}. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten. Je uiterste terugkeerdatum is ${returnDeadlineText}.`
+            "step4-no-status-cta",
+            "Aanvraag starten"
           );
+          setStep4NoStatusElementColor("yellow");
           showStep4NoStatusIcon("return-needed");
           return;
         }
