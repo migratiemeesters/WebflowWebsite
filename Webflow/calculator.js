@@ -1458,18 +1458,62 @@ function initCalculator() {
           todayParts.utcMs >= earliestStartParts.utcMs &&
           todayParts.utcMs <= idealLatestStartParts.utcMs
         ) {
-          setOutput("return-status-title", "Aanvraagperiode geopend");
-          setOutput(
-            "return-deadline-text",
-            `De uiterste terugkeerdatum naar Paraguay is ${returnDeadlineText}. Je aanvraagperiode voor de permanente verblijfsvergunning is al gestart. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten.`
-          );
-          setOutput("return-status-cta", "Aanvraag starten");
-          setOutput(
-            "return-status-description",
-            `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je kunt zonder boete de aanvraag voor je permanente verblijfsvergunning starten tot en met ${formatDateParts(idealLatestStartParts)}. Na ${formatDateParts(idealLatestStartParts)} kun je nog aanvragen tot en met ${formatDateParts(latestStartParts)}, maar dan geldt een boete van 669.012 guaraní. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten. Je uiterste terugkeerdatum is ${returnDeadlineText}.`
-          );
-          showStep4NoStatusIcon("return-needed");
-          return;
+        setOutput(
+          "step4-no-status-title",
+          "Aanvraagperiode geopend"
+        );
+        setRichOutput(
+          "return-deadline-text",
+          [
+            "Deze datum wordt berekend vanaf je eerste vertrek uit Paraguay. Als je vóór deze datum terugkeert, blijf je binnen de 365-dagenregel."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-1",
+          [
+            "De aanvraagperiode voor je permanente verblijfsvergunning is geopend."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-2",
+          [
+            "Je kunt zonder boete starten tot en met ",
+            {
+              text: formatDateParts(idealLatestStartParts),
+              className: "result-date result-date-bold"
+            },
+            "."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-3",
+          [
+            "Na ",
+            {
+              text: formatDateParts(idealLatestStartParts),
+              className: "result-date result-date-bold"
+            },
+            " kun je nog aanvragen tot en met ",
+            {
+              text: formatDateParts(latestStartParts),
+              className: "result-date result-date-bold"
+            },
+            ", maar dan geldt een boete van 669.012 guaraní."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-4",
+          [
+            "Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten."
+          ]
+        );
+        setOutput(
+          "step4-no-status-cta",
+          "Aanvraag starten"
+        );
+        setStep4NoStatusElementColor("yellow");
+        showStep4NoStatusIcon("return-needed");
+        return;
         }
 
         if (
