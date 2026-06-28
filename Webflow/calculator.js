@@ -1755,14 +1755,10 @@ function initCalculator() {
       setStep4NoStatusElementColor("yellow");
       showStep4NoStatusIcon("return-needed");
       return;
-      }
-      resetReturnStatusOutputs();
-      setRichOutput("return-deadline-text", []);
-      return;
     }
 
     resetReturnStatusOutputs();
-    setOutput("return-deadline-text", "");
+    setRichOutput("return-deadline-text", []);
     return;
   }
 
@@ -1918,20 +1914,58 @@ function initCalculator() {
       todayParts.utcMs < earliestStartParts.utcMs;
 
 // STEP 4 = NEE
-    setOutput("return-status-title", "Permanente verblijfsvergunning niet meer mogelijk");
-
+    setOutput(
+      "step4-no-status-title",
+      "Permanente verblijfsvergunning niet meer mogelijk"
+    );
+    setRichOutput(
+      "return-deadline-text",
+      [
+        "Je bent niet uiterlijk op deze datum teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel."
+      ]
+    );
     if (periodNotOpenYet) {
-      setOutput(
-        "return-status-description",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend. Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk zodra de aanvraagperiode opent. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      setRichOutput(
+        "step4-no-status-description-1",
+        [
+          "De aanvraagperiode voor je permanente verblijfsvergunning is nog niet geopend."
+        ]
       );
     } else {
-      setOutput(
-        "return-status-description",
-        `De aanvraagperiode voor je permanente verblijfsvergunning is geopend. Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor voldoe je niet aan de 365-dagenregel. Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
+      setRichOutput(
+        "step4-no-status-description-1",
+        [
+          "De aanvraagperiode voor je permanente verblijfsvergunning is geopend."
+        ]
       );
     }
+    setRichOutput(
+      "step4-no-status-description-2",
+      [
+        "Je bent niet uiterlijk op ",
+        {
+          text: formatDateParts(returnDeadlineParts),
+          className: "result-date result-date-bold"
+        },
+        " teruggekeerd naar Paraguay."
+      ]
+    );
+    setRichOutput(
+      "step4-no-status-description-3",
+      [
+        "Een directe aanvraag voor je permanente verblijfsvergunning is daarom niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen."
+      ]
+    );
+    setRichOutput(
+      "step4-no-status-description-4",
+      []
+    );
+    setOutput(
+      "step4-no-status-cta",
+      "Tijdelijke verblijfsvergunning verlengen"
+    );
 
+    setStep4NoStatusElementColor("red");
     showStep4NoStatusIcon("too-late");
 
 // STEP 3 = JA
