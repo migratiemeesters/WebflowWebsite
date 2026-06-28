@@ -1537,12 +1537,12 @@ function initCalculator() {
           setRichOutput(
             "step4-no-status-description-2",
             [
-              "Omdat je na ",
+              "De periode zonder boete liep tot en met ",
               {
                 text: formatDateParts(idealLatestStartParts),
                 className: "result-date result-date-bold"
               },
-              " aanvraagt, geldt een boete van 669.012 guaraní."
+              ". Omdat je daarna aanvraagt, geldt een boete van 669.012 guaraní."
             ]
           );
           setRichOutput(
@@ -1553,7 +1553,7 @@ function initCalculator() {
                 text: formatDateParts(latestStartParts),
                 className: "result-date result-date-bold"
               },
-              "."
+              ". Daarna is een directe aanvraag niet meer mogelijk."
             ]
           );
           setRichOutput(
@@ -1749,7 +1749,7 @@ function initCalculator() {
         ]
       );
       setOutput(
-        "step4-no-status-cta",
+        "step4-no-status-cta",ti
         "Plan je terugkeer"
       );
       setStep4NoStatusElementColor("yellow");
@@ -1962,7 +1962,7 @@ function initCalculator() {
     );
     setOutput(
       "step4-no-status-cta",
-      "Tijdelijke verblijfsvergunning verlengen"
+      "Bespreek je situatie"
     );
 
     setStep4NoStatusElementColor("red");
@@ -1974,7 +1974,7 @@ function initCalculator() {
       "step3-yes-status-description-1",
       `Je bent niet uiterlijk op ${formatDateParts(returnDeadlineParts)} teruggekeerd naar Paraguay. Daardoor is een directe overgang van een tijdelijke verblijfsvergunning naar een permanente verblijfsvergunning niet mogelijk. Je moet eerst je tijdelijke verblijfsvergunning verlengen.`
     );
-    setOutput("step3-yes-status-cta", "Tijdelijke verblijfsvergunning verlengen");
+    setOutput("step3-yes-status-cta", "Bespreek je situatie");
     setStep3YesStatusElementColor("red");
     showStep3YesStatusIcon("too-late");
 
