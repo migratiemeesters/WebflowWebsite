@@ -1537,12 +1537,12 @@ function initCalculator() {
           setRichOutput(
             "step4-no-status-description-2",
             [
-              "Omdat je na ",
+              "De periode zonder boete liep tot en met ",
               {
                 text: formatDateParts(idealLatestStartParts),
                 className: "result-date result-date-bold"
               },
-              " aanvraagt, geldt een boete van 669.012 guaraní."
+              ". Omdat je daarna aanvraagt, geldt een boete van 669.012 guaraní."
             ]
           );
           setRichOutput(
@@ -1553,7 +1553,7 @@ function initCalculator() {
                 text: formatDateParts(latestStartParts),
                 className: "result-date result-date-bold"
               },
-              "."
+              ". Daarna is een directe aanvraag niet meer mogelijk."
             ]
           );
           setRichOutput(
