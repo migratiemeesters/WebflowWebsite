@@ -1569,15 +1569,48 @@ function initCalculator() {
           return;
         }
 
-        setOutput("return-status-title", "Aanvraagperiode verstreken");
         setOutput(
+          "step4-no-status-title",
+          "Aanvraagperiode verstreken"
+        );
+        setRichOutput(
           "return-deadline-text",
-          `De uiterste terugkeerdatum naar Paraguay was ${returnDeadlineText}. Hoewel deze terugkeerdatum relevant is voor de 365-dagenregel, is de aanvraagperiode voor je permanente verblijfsvergunning inmiddels verstreken. De uiterste datum om te starten was ${formatDateParts(latestStartParts)}.`
+          [
+            "Hoewel deze datum relevant is voor de 365-dagenregel, is de aanvraagperiode voor je permanente verblijfsvergunning inmiddels verstreken."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-1",
+          [
+            "De aanvraagperiode voor je permanente verblijfsvergunning is verstreken."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-2",
+          [
+            "De uiterste datum om te starten was ",
+            {
+              text: formatDateParts(latestStartParts),
+              className: "result-date result-date-bold"
+            },
+            "."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-3",
+          [
+            "Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie."
+          ]
+        );
+        setRichOutput(
+          "step4-no-status-description-4",
+          []
         );
         setOutput(
-          "return-status-description",
-          `De aanvraagperiode voor je permanente verblijfsvergunning is verstreken. De uiterste datum om nog te starten was ${formatDateParts(latestStartParts)}. Neem contact met ons op om te bekijken welke mogelijkheden er nog zijn in jouw situatie.`
+          "step4-no-status-cta",
+          "Bespreek je situatie"
         );
+        setStep4NoStatusElementColor("red");
         showStep4NoStatusIcon("too-late");
         return;
       }
