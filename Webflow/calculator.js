@@ -1471,7 +1471,7 @@ function initCalculator() {
         setRichOutput(
           "step4-no-status-description-1",
           [
-            "De aanvraagperiode voor je permanente verblijfsvergunning is geopend."
+            "De aanvraagperiode voor je permanente verblijfsvergunning is geopend, maar de periode zonder boete is verstreken. Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten."
           ]
         );
         setRichOutput(
@@ -1503,15 +1503,13 @@ function initCalculator() {
         );
         setRichOutput(
           "step4-no-status-description-4",
-          [
-            "Omdat je nog niet bent teruggekeerd naar Paraguay, moet je eerst terugkomen om de aanvraag te starten."
-          ]
+          []
         );
         setOutput(
           "step4-no-status-cta",
           "Aanvraag starten"
         );
-        setStep4NoStatusElementColor("yellow");
+        setStep4NoStatusElementColor("green");
         showStep4NoStatusIcon("return-needed");
         return;
         }
